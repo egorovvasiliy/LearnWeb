@@ -3,8 +3,9 @@
 https://yandex.ru/dev/rasp/doc/concepts/about-docpage/
 -	Хранение информации в БД msSql.
 -	Отображение данных в на портале ASP.Net Core средствами API 2Gis.
-- В перспективе построение оптимального маршрута между двумя автобусными станциями
 https://api.2gis.ru/doc/maps/ru/quickstart/
+- В перспективе построение оптимального маршрута между двумя автобусными станциями
+
 2. Используемые в проекте исходные данные:
 - https://yandex.ru/dev/rasp/doc/reference/stations-list.html
   170 000 строк в БД
@@ -19,3 +20,4 @@ https://api.2gis.ru/doc/maps/ru/quickstart/
 6. Frontend:
  - React+Redux (начал использовать Saaga,хотя это несколько усложнило проект), компоненты(контейнеры) как на классах, так и на хуках
 7. Ссылка на видео-демонстрацию работы сайта.
+https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleVideo.mp4
