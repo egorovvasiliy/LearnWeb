@@ -1,0 +1,97 @@
+﻿@*Демонстрация кода: #bootstrap, #razor*@
+@using AutoZdRoutes.WEB.Models;
+@*-----------------Конфигурация меню только здесь--------------*@
+@{
+    var idM = 0;
+    //Использование коллекции C# объектов выглядит удобнее, чем JSON-запись, особенно  благодаря проверке компиллятора
+    var menus = new List<Menu> {
+        {new Menu(++idM,"Редактор карты",MenuType.Button,HandlerType.Script,"ClickMenu(this,ClickEdit)")},
+        {new Menu(++idM,"Расчет",MenuType.Button)},
+        {new Menu(++idM,"Настройки"){
+            children = new List<Menu>{
+            new Menu(++idM,"Формат меню"){
+                children=new List<Menu>{
+                    new Menu(++idM,"bootstrap"),
+                    new Menu(++idM,"react")
+                }
+            },
+            new Menu(++idM,"Оформление"){
+                children=new List<Menu>{
+                new Menu(++idM,"Шрифт"){
+                    children=new List<Menu>{
+                    new Menu(++idM,"Стиль"){
+                        children=new List<Menu>{
+                        new Menu(++idM,"Arial"),
+                        new Menu(++idM,"TimeNewRoman")
+                        }
+                    },
+                    new Menu(++idM,"Размер шрифта")
+                    }
+                },
+                new Menu(++idM,"Цвет"){
+                    children=new List<Menu>{
+                    new Menu(++idM,"Темный"),
+                    new Menu(++idM,"Синий")
+                    }
+                }
+                }
+            },
+            }
+        }
+        },
+        {new Menu(++idM,"Справка"){
+            children=new List<Menu>{
+            new Menu(++idM,"О ресурсе",MenuType.DropRight,HandlerType.Action,"Home/Privet"),
+            new Menu(++idM,"Техподдержка",MenuType.DropRight,HandlerType.Script,"alert('привет мир')")
+            }
+        }
+        },
+        {new Menu(++idM,"Новости"){
+            children=new List<Menu>{
+            new Menu(++idM,"Показывать"),
+            new Menu(++idM,"Последнее")}
+            }
+        },
+        {new Menu(++idM,"Портал",MenuType.None,HandlerType.Action,_handler:"Home/Index")}
+    };
+}
+@*-------------------------------------------------------------*@
+<nav id="nav" class="navbar navbar-expand bg-dark navbar-dark">
+    <ul class="navbar-nav">
+        @foreach (var link in menus)
+        {
+            var id = "menu" + link.id;
+            //Заменить на Case...Добавить HandlerType.Script..
+            @if (link.typeMenu == MenuType.Button) // Раскрытие панели меню, далее работа js+React!!!!! Этот кусок уже не аткуален!!!!!
+            {
+                <li class="nav-item">
+                    @*----скрипты работы с меню находятся здесь ~\js\work_menu.tsx------------*@
+                    <a class="nav-link dropdown-toggle" data-toggle="collapse" data-target="#extMenu" href="#" onclick=@link.handler>@link.name</a>
+                </li>
+            }
+            else if (link.typeMenu == MenuType.DropDown) //Многоуровневая вложенность элементов меню
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">@link.name</a>
+                    @Html.Partial("sub_menu", link)
+                </li>
+            }
+            else if (link.typeMenu == MenuType.None && link.typeHandler==HandlerType.None) // Переходы на новые страницы
+            {
+                <li class="nav-item">
+                    @Html.RouteLink(link.name, new { controller = "Home", action = "Index" }, new { @class = "nav-link" })
+                </li>
+            }
+            else if (link.typeHandler == HandlerType.Action) // Переходы на новые страницы
+            {
+                var route_link = link.handler.Split('/'); //---!!!---Проверка на наличие маршрута не выполнялась
+                <li class="nav-item">
+                    @Html.RouteLink(link.name, new { controller = route_link[0], action = route_link[1] }, new { @class = "nav-link" })
+                </li>
+            }
+        }
+    </ul>
+</nav>
+@*---------------------------------------------------------------------------------------------*@
+<div id="extMenu" class="extensionMenu collapse"></div>
+@*---------------------------------------------------------------------------------------------*@

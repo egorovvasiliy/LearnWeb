@@ -1,0 +1,4 @@
+To: polevoy38@mail.ru
+Subject: Verify your email
+Message: Click <a href="https://localhost:55555/api/Account?Id=2083a600-e95d-4f10-a98b-b9bcaf0248a5&token=CfDJ8HM3DvdndkBFmTvkFtwDJ6axw5e%2FGetb1K1yUBTFQDa3XHuit3Vkwu15a%2FspvevQiHRw%2FsQP%2FUzhUo7Uu77UrRdfBGGwQom%2FL9FYbHTdvMgZXNulr0PhWpAMc%2F1RdeZrM99IBEyQObkmvhnoBb6oiwRW6n8zsSmvJhi8TM1m34xVCQVx42O24cbjtFNLXAEhl9UwjtqVOvca02CEEwuC1muMuNZhpHO0os5fSaW4CrmC7FC1XhSEzoz1IaQPOlNExA%3D%3D">here</a> to verify your email
+

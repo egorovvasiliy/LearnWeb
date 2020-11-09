@@ -1,0 +1,21 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "noEmitOnError": true,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "removeComments": true,
+    "lib": [
+      "dom",
+      "es2015",
+      "es2016"
+    ],
+    "target": "es5",
+    "jsx": "react",
+    "emitBOM": true,
+    "charset": "utf8" // если в ts-файлах слетает кодировка UTF-8 , то надо создать новый .ts-файл и все туда скопировать, назвать как надо, а старый файл удалить
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

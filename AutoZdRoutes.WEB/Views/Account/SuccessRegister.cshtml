@@ -1,0 +1,28 @@
+﻿@model string;
+@{
+    var email = Model;
+    ViewData["Title"] = "Регистрация на сайте";
+}
+@section style {
+    <style>
+        h1 {
+            height: 100%;
+            margin: auto auto 10px;
+        }
+        a {
+            display:block;
+            width:100%;
+            text-align:center;
+            margin:10px auto auto;
+            font-size:20px;
+        }
+    </style>
+}
+<div style="display:flex;flex-direction:column; justify-content:center; flex:1; background-color:antiquewhite">
+    <div style="margin:auto">
+        @{
+            <h1>Для успешной регистрации пройдите по ссылке, отправленной на:@email</h1>
+            @Html.ActionLink("Вернуться на главную страницу сайта", "Index", "Home");
+        }
+    </div>
+</div>

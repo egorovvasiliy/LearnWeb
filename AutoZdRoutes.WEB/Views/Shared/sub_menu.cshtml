@@ -1,0 +1,35 @@
+﻿@*DropDown, выскакивающий вправо собирается здесь*@
+@*Представление используется рекурсивно*@
+@using AutoZdRoutes.WEB.Models;
+@model Menu
+@{
+    var menu = Model;
+    var id = "menu" + menu.id;
+}
+
+@if (menu.children != null)
+{
+    <ul id=@id class="dropdown-menu">
+        @foreach (var item in menu.children)
+        {
+            if (item.children == null)
+            {
+                if (item.typeHandler == HandlerType.Action)
+                {
+                    <li><a class="dropdown-item" href="@item.handler">@item.name</a></li>
+}
+                else
+                {
+                    <li><a class="dropdown-item" href="#" onclick="@item.handler">@item.name</a></li>
+}
+            }
+            else
+            {
+                <li id="@item.id" class="dropdown dropright">
+                    <a class="dropdown-item  dropdown-toggle subMenu" href="#" data-toggle="dropdown">@item.name</a>
+                    @Html.Partial("sub_menu", @item)
+                </li>
+            }
+        }
+    </ul>
+}

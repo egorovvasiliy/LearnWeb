@@ -1,0 +1,35 @@
+﻿@model int;
+@{
+    var success = Model;
+    ViewData["Title"] = "Результат подтверждения регистрации";
+}
+@section style {
+    <style>
+        h1 {
+            height: 100%;
+            margin: auto auto 10px;
+        }
+        a {
+            display:block;
+            width:100%;
+            text-align:center;
+            margin:10px auto auto;
+            font-size:20px;
+        }
+    </style>
+}
+<div style="display:flex;flex-direction:column; justify-content:center; flex:1; background-color:antiquewhite">
+    <div style="margin:auto">
+        @{
+            if (success == 1)
+            {
+                <h1>Email успешно подтвержден</h1>
+            }
+            else
+            {
+                <h1>Не удалось подтвердить Email</h1>
+            }
+            @Html.ActionLink("Вернуться на главную страницу сайта", "Index", "Home");
+        }
+    </div>
+</div>

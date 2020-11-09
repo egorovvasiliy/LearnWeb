@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AutoZdRoutes.BLL\AutoZdRoutes.BLL.csproj" />
+    <ProjectReference Include="..\..\AutoZdRoutes.DAL\AutoZdRoutes.DAL.csproj" />
+  </ItemGroup>
+
+
+</Project>

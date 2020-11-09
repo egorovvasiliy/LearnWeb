@@ -1,0 +1,19 @@
+﻿@model int
+@{
+    var nonAuthorize = Model;
+    ViewData["Title"] = "Home Page";
+}
+@section scripts_start {
+    @{
+        if (nonAuthorize == 401)                                                                
+        {                                                                                       
+            <script type="text/javascript" charset="utf-8" src="~/bundle/nonAuthorize.js"></script> 
+        }                                                                                       
+    }
+}
+<div id="app"></div>
+@section scripts_end {
+    @{
+        <script type="text/javascript" charset="utf-8" src="~/bundle/app.js"></script>
+    }
+}

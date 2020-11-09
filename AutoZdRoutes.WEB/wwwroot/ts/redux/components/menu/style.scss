@@ -1,0 +1,88 @@
+﻿@import '../../../src/app.scss';
+$color-active-pan: #786a6a; // фон панелей
+//----------------------------------------------------------------
+@mixin wrapItem {
+    @include pointer;
+    @include borderElement;
+    min-height: 50px;
+    max-width: 100px;
+
+    &:nth-child(1) {
+        border-left: unset;
+    }
+}
+.wrapItem0 {
+    @include wrapItem;
+    margin: 10px 5px;
+}
+
+.wrapItem1 {
+    @include wrapItem;
+    background-color: white;
+    box-shadow: inset 2px 2px 10px 1px;
+    padding: 10px;
+    margin: 5px 5px;
+}
+.wrapItem2 {
+    @include wrapItem;
+    margin: 5px 10px;
+    border-bottom: solid white;
+    border-top: solid white;
+    transition: 0.3s;
+}
+.closerMenu {
+    text-align: center;
+    height: 30px;
+    width: 30px;
+    cursor: crosshair;
+    color: $color-gray;
+}
+.CurrentMenu {
+    border: 1px solid $color-gray;
+    background-color: $color-active-pan;
+}
+
+.LeftMenu {
+    display: flex;
+    flex-flow: row wrap;
+
+    &[data-hide="true"] {
+        opacity: 0.2
+    }
+}
+.RightMenu {
+    display: flex;
+    flex-flow: row wrap;
+    flex: 1;
+}
+.ShowBorderRightMenu {
+    box-shadow: inset 2px 2px 10px 1px;
+}
+//----------------------------------------------------------------
+img {
+    user-select: none;
+}
+.itemImage {
+    height: 25px;
+}
+@mixin itemName {
+    user-select: none;
+    word-break: break-word;
+    text-align: center;
+}
+.itemName0 {
+    @include itemName;
+    font-size: 12px;
+    color: $color-gray
+}
+
+.itemName1 {
+    @include itemName;
+    font-size: 12px;
+    color: black;
+}
+//----------------------------------------------------------------
+.CenterContent{
+    height:fit-content;
+    padding:10px;
+}

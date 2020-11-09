@@ -1,0 +1,125 @@
+﻿/*Залил в App.tsx*/
+/*////////////////////-Переопределение стилей меню-//////////////////////////////////---часть стилей выполнены в User_menu.tsx средствами Material-ui*/
+$color-gray:#ffffffb5;// фон индикатора меню
+$color-tab: #916e6e; // фон панелей
+@mixin borderElement {
+    border-left: 1px solid;
+    padding: 10px 5px;
+    margin: 10px 5px 10px 5px;
+    min-width: 50px;
+    height: fit-content;
+}
+@mixin pointer {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+:global .Centered {
+    @include borderElement;
+    @include pointer;
+    justify-content: center;
+    margin: 10px 5px;
+}
+:global button {
+    cursor: pointer;
+}
+/*----------------------------------------------------*/
+:global .Mui-focused {
+    color: black !important;
+    border-color: black !important;
+}
+:global .MuiOutlinedInput-notchedOutline {
+    color: black !important;
+    border-color: black !important;
+}
+
+:global .MuiTabs-flexContainer {
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+}
+:global .MuiTab-wrapper { /*Текст кнопок меню*/
+    color: white !important;
+}
+
+:global .MuiTab-fullWidth {
+    flex-grow: unset !important
+}
+:global .MuiTypography-root {
+    max-height: 200px;
+    min-height: 85px;
+    display: flex;
+    flex-flow: wrap row;
+}
+:global .MuiBackdrop-root {
+    z-index: 1000 !important;
+}
+/*--Отметка выбранного меню--------------------------*/
+:global .MuiTabs-indicator {
+    background-color: $color-gray !important;
+    height: 3px !important;
+}
+
+:global button[aria-selected="true"] {
+    opacity: 1 !important;
+}
+
+:global .MuiTouchRipple-root:hover {
+    clear: unset !important;
+}
+
+:global .MuiTab-textColorInherit {
+    opacity: 0.4 !important;
+}
+:global .MuiBox-root {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    width: 100%;
+    padding: unset !important;
+}
+:global .react-swipeable-view-container > div {
+    background-color: $color-tab;
+    border-bottom: solid;
+    border-bottom-color: #343a40
+}
+//-------------------------------------------------------------
+$foot: 45px; // для футера
+:global #app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-bottom: -$foot;
+}
+.Content {
+    position:relative;
+    display: block;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-bottom: $foot;
+}
+.WrapMenu {
+    //display определен динамически в компоненте
+    flex-flow: row wrap;
+    width: 100%;
+    min-width: 300px;
+}
+.WrapMap {
+    border-color: black;
+    border-bottom: solid;
+    min-height: 50%;
+    flex-grow:1;
+    position:relative;
+}
+/*-----------------------------------------------------------*/
+:global .SplitPane {
+    position: relative !important; //Костыль
+}
+//----------
+:global .InputNumber {
+    width: 30px;
+    display: block;
+    margin: auto;
+}

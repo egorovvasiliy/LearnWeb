@@ -1,0 +1,3 @@
+﻿ActionsCreators в папке actions содержат функции со следующими суффиксами:
+	1)	_ActCr	-	Чистые функции, возвращают Action
+	2)	_ActTh	-	Thunk

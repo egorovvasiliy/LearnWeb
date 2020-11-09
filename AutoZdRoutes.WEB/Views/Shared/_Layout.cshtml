@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="~/css/main.css" rel="stylesheet" />
+    @RenderSection("style", required: false)
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/bundle/signaLRInitialize.js"></script>
+    <script src="~/bundle/test.js"></script>
+    @RenderSection("scripts_start", required: false)
+</head>
+<body>
+    @RenderBody()
+    <footer>@@Разработано lufarik-studio</footer>
+    @RenderSection("scripts_end", required: false)
+</body>
+</html>

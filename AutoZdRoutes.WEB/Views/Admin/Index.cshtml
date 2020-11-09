@@ -1,0 +1,27 @@
+﻿@*Демонстрация работы с Jquery и bootstrap*@
+@{
+    ViewData["Title"] = "Страница администрирования";
+}
+@section style {
+    <style>
+        #titleAdm {
+            height: 100%;
+            background-color: green;
+        }
+    </style>
+}
+@section scripts_start {
+    <link href="~/css/admin_menu.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+}
+<header class="wrapMenu">
+    @Html.Partial("navigation")
+</header>
+<div class="contentBoots">
+    <div id="titleAdm">Добро пожаловать в админку</div>
+</div>
+@section scripts_end {
+    <script src="~/ts/bootstrap_admin_menu.js"></script>
+}
