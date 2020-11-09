@@ -1,0 +1,33 @@
+select user_id,start,DateAdd(hour,1,finish) as finish
+from (
+    select user_id,ses, min(start) as start, max(next) as finish, count(*) as col
+    from (
+        select user_id,start,next,ses
+            ,row_number() over (partition by user_id,ses order by start) as num1
+            ,row_number() over (partition by user_id order by start) as num2
+            ,num2-num1 as num3
+        from (
+            select  user_id, happened_at as start,
+                isnull(LEAD(happened_at) OVER (partition BY user_id order by happened_at),happened_at) as next,
+                case when (next-happened_at)>'01:00' then 1 else 0 end as ses
+            from test.vimbox_pages 
+        ) x 
+        --order by user_id,start
+    ) x
+    group by user_id, ses, num3
+) x
+where ses=0
+
+union all
+-------------------------------------------------------------------------------------------------------------
+select user_id,start, DateAdd(hour,1,start) as finish
+from (
+    select user_id, start, next, ses, lag(ses) over (partition BY user_id order by start) as prev_ses
+        ,case when (prev_ses=1 and ses=1) or (prev_ses is null and ses=1) then 1 else 0 end as flag
+    from (
+        select user_id, happened_at as start,
+            isnull(LEAD(happened_at) OVER (partition BY user_id order by happened_at),happened_at) as next,
+            case when (next-happened_at)>'01:00' then 1 else 0 end as ses
+        from test.vimbox_pages
+        ) x
+) x where flag=1
