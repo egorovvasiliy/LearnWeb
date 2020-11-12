@@ -40,7 +40,7 @@ import { GetSocket } from '../../../wsChat';
 //#endregion
 //---------------------------------------------
 //#region secondary
-enum ActionWSEnum { setName, updateStatus };
+enum ActionWSEnum { initUser, updateStatus };
 interface IActionWS {
     type: ActionWSEnum,
     payload: string | IUser
@@ -177,7 +177,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
     loginWSChat = (_name: string) => {
         this.socket = GetSocket();
         this.socket.onmessage = (e) => {
-            window.SendNotification(`websocket вещает: ${e.data}`);
+            console.log('socket.onmessage', JSON.parse(e.data));
         }
         this.socket.onopen = (e) => {
             this.props.loginWsChat(_name);
@@ -186,7 +186,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
                 Status: 'Hey there I am using WhatsApp'
             };
             let payload: IActionWS = {
-                type: ActionWSEnum.setName,
+                type: ActionWSEnum.initUser,
                 payload:user
             }
             let jsonString = JSON.stringify(payload);

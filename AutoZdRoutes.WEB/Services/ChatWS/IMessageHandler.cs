@@ -13,40 +13,48 @@ using System.Threading.Tasks;
 
 namespace AutoZdRoutes.WEB.Services
 {
-    interface IMessageHandler {
-        void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> socketsList, ActionWS action);
-    }
-    class SetNameMessageHandler : IMessageHandler
+    public class ActionRequestWS
     {
-        public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> socketsList, ActionWS action)
+        public ActionRequestTypes type { get; set; }
+        public Object payload { get; set; }
+    }
+    public class ActionResponseWS
+    {
+        public ActioResponseTypes type { get; set; }
+        public Object payload { get; set; }
+    }
+    interface IMessageHandler {
+        void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> connectionsList, ActionRequestWS action);
+        async Task SendAll(WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel>connectionsList)
+        {
+            foreach (var con in connectionsList)
+            {
+                await con.Socket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+            }
+        }
+    }
+    class InitUserMessageHandler : IMessageHandler
+    {
+        public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> connectionsList, ActionRequestWS action)
         {
             var jsonString = action.payload.ToString();
-            var user = JsonSerializer.Deserialize<User>(jsonString);//#Solve:Лучше,конечно, создать отдельный класс модели
-            var con = socketsList.FirstOrDefault(con => con.Socket == socket);
-            con.User = user;
+            var init_user = JsonSerializer.Deserialize<User>(jsonString);//#Solve:Лучше,конечно, создать отдельный класс модели
+            var con = connectionsList.FirstOrDefault(con => con.Socket == socket);
+            con.User = init_user;
+            var response = new ActionResponseWS() { type = ActioResponseTypes.userIn, payload = init_user };
+            var response_string = JsonSerializer.Serialize(response);
+            var bytesResponse= Encoding.UTF8.GetBytes(response_string, 0, response_string.Length);
+            (this as IMessageHandler).SendAll(result, bytesResponse, connectionsList);
         }
     }
     class UpdateStatusMessageHandler : IMessageHandler
     {
-        public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> socketsList, ActionWS action)
+        public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> connectionsList, ActionRequestWS action)
         {
         }
     }
     class MessageAllSend : IMessageHandler {
-        public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> socketsList, ActionWS action) { 
+        public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> connectionsList, ActionRequestWS action) { 
         }
-        async Task Run(WebSocketReceiveResult result, byte[] buffer)
-        {
-            //foreach (var keyValue in socketsDictionary)
-            //{
-            //    var socket = keyValue.Value;
-            //    await socket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
-            //}
-        }
-    }
-    public class ActionWS
-    {
-        public ActionTypes type { get; set; }
-        public Object payload { get; set; }
     }
 }

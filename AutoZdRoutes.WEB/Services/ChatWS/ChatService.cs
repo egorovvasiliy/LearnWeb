@@ -13,10 +13,17 @@ using System.Threading.Tasks;
 
 namespace AutoZdRoutes.WEB.Services
 {
-    public enum ActionTypes
+    public enum ActionRequestTypes
     {
-        setName,
+        initUser,
         updateStatus
+    }
+    public enum ActioResponseTypes
+    {
+        userIn,
+        userOut,
+        userSetStatus,
+        message
     }
     public class User {
         public string Name { get; set; }
@@ -39,16 +46,16 @@ namespace AutoZdRoutes.WEB.Services
             {
                 var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
                 IMessageHandler messageHandler;
-                messageHandler = new SetNameMessageHandler();
+                messageHandler = new InitUserMessageHandler();
                 try
                 {
-                    var action = JsonSerializer.Deserialize<ActionWS>(message);
+                    var action = JsonSerializer.Deserialize<ActionRequestWS>(message);
                     switch (action.type)
                     {
-                        case ActionTypes.setName:
-                            messageHandler = new SetNameMessageHandler();
+                        case ActionRequestTypes.initUser:
+                            messageHandler = new InitUserMessageHandler();
                             break;
-                        case ActionTypes.updateStatus:
+                        case ActionRequestTypes.updateStatus:
                             messageHandler = new UpdateStatusMessageHandler();
                             break;
                         default:
