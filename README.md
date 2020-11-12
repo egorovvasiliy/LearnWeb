@@ -21,3 +21,4 @@ https://api.2gis.ru/doc/maps/ru/quickstart/
  - React+Redux (начал использовать Saaga,хотя это несколько запутало проект), компоненты(контейнеры) как на классах, так и на хуках
 7. Ссылка на видео-демонстрацию работы сайта.
 https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleVideo.mp4
+8. Начал выполнять тестовое задание на WebSocket
