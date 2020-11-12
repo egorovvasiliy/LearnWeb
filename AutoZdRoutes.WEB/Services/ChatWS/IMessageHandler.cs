@@ -21,10 +21,9 @@ namespace AutoZdRoutes.WEB.Services
         public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> socketsList, ActionWS action)
         {
             var jsonString = action.payload.ToString();
-            var upd_con = JsonSerializer.Deserialize<СonnectionModel>(jsonString);//#Solve:Лучше,конечно, создать отдельный класс модели
+            var user = JsonSerializer.Deserialize<User>(jsonString);//#Solve:Лучше,конечно, создать отдельный класс модели
             var con = socketsList.FirstOrDefault(con => con.Socket == socket);
-            con.Name = upd_con.Name;
-            con.Status = upd_con.Status;
+            con.User = user;
         }
     }
     class UpdateStatusMessageHandler : IMessageHandler

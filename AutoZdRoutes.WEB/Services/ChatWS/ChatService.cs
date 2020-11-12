@@ -18,11 +18,14 @@ namespace AutoZdRoutes.WEB.Services
         setName,
         updateStatus
     }
+    public class User {
+        public string Name { get; set; }
+        public string Status { get; set; }
+    }
     public class СonnectionModel {
         public СonnectionModel() {
         }
-        public string Name { get; set; }
-        public string Status { get; set; }
+        public User User { get; set; }
         public WebSocket Socket { get; set; }
     }
     public class ChatService
