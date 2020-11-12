@@ -30,5 +30,6 @@
     inputValueLoginNameWS: HTMLInputElement
     //#endregion Refs
 }
+declare enum ActionWSEnum { setName, updateStatus }
 declare module '*.css';
 declare module '*.scss';

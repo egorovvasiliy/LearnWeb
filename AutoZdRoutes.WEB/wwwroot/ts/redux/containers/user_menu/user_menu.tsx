@@ -36,9 +36,15 @@ import { changeVisibleMap_ActCr, changeVisibleStationsTab_ActCr, setTypeStation_
 import * as styles from './style.scss';
 import { changeVisibleWsChatt_ActCr, loginWsChat_ActCr } from '../../actions/wsChatActions';
 const style = styles as ClassUserMenu;
+import { GetSocket } from '../../../wsChat';
 //#endregion
 //---------------------------------------------
 //#region secondary
+enum ActionWSEnum { setName, updateStatus };
+interface IActionWS {
+    type: ActionWSEnum,
+    payload: string | IUser
+}
 const SaveSettingsAsync = async (jsonPayload: ISettingsState) => {
     let response = await fetch(urlWeb + `/Settings/Save`, {
         method: 'POST',
@@ -166,6 +172,32 @@ class _UserMenu extends React.Component<PropsType, TState> {
         e.preventDefault();
         let typeId = e.target.value as number;//можно использовать ref-ы
         this.props.SetTypeStation(typeId);
+    }
+    socket: WebSocket;
+    loginWSChat = (_name: string) => {
+        this.socket = GetSocket();
+        this.socket.onmessage = (e) => {
+            window.SendNotification(`websocket вещает: ${e.data}`);
+        }
+        this.socket.onopen = (e) => {
+            this.props.loginWsChat(_name);
+            let user: IUser = {
+                Name: _name,
+                Status: 'Hey there I am using WhatsApp'
+            };
+            let payload: IActionWS = {
+                type: ActionWSEnum.setName,
+                payload:user
+            }
+            let jsonString = JSON.stringify(payload);
+            this.socket.send(jsonString);
+        };
+        this.socket.onclose = e => {
+            this.props.logoutWsChat();
+        }
+    }
+    logoutWSChat = (name: string) => {
+        this.socket.close();
     }
 //-----------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------
@@ -307,7 +339,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
                     {/*WebSocketChat*/}
                     <TabPanel value={this.state.valueTab} index={2}>
                         <div className={style.wrapChatMenu}>
-                            <LoginWebSocket isAuth={this.props.isAuth} name={this.props.userNameWsChat} LoginClick={(name: string) => { this.props.loginWsChat(name); window.SendNotification(`${name} вошел`) }} LogOutClick={(name) => { this.props.logoutWsChat(); window.SendNotification((`${name} вышел`)) }} />
+                            <LoginWebSocket isAuth={this.props.isAuth} name={this.props.userNameWsChat} LoginClick={this.loginWSChat} LogOutClick={this.logoutWSChat} />
                             <RadioButtonBinary className={style.FormChatRB} value={this.props.visibleWsChat} nameTrue={"Показать чат"} nameFalse={"Скрыть чат"} change={(e) => {this.props.changeVisibleWsChat(!this.props.visibleWsChat) }} />
                         </div>
                     </TabPanel>
