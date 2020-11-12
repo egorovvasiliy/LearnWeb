@@ -26,6 +26,8 @@
     inputValueRegisterName: HTMLInputElement,
     inputValueRegisterPass: HTMLInputElement,
     inputValueRegisterPassConf: HTMLInputElement,
+    //------------------------------------------
+    inputValueLoginNameWS: HTMLInputElement
     //#endregion Refs
 }
 declare module '*.css';

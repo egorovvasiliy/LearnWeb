@@ -25,7 +25,7 @@ import { Label_Login } from "../../components/label_Login"
 import { Register } from '../../components/register';
 import { urlWeb } from "../../../constants"
 import { GenerateRandomCallFunc } from '../../../testNotify'
-import { Login as LoginWebSocket } from '../../components/websocketChat/login/login'
+import { LoginWSChat as LoginWebSocket } from '../../components/websocketChat/login/login'
 //--------------------------------------------
 import { RootState } from '../../reducers/rootreducer';
 import { adminRole, ISettingsState} from '../../types';
@@ -87,7 +87,7 @@ const mapStateToProps = (store: RootState) => {
     return {
         username: store.auth.username,
         userrole: store.auth.userrole,
-        isAuth: store.auth.isAuth,
+        isAuth: store.wsChat.isAuth,
         isAuthWs: store.wsChat.isAuth,
         visibleWsChat: store.wsChat.visibleChat,
         userNameWsChat: store.wsChat.username,
@@ -307,7 +307,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
                     {/*WebSocketChat*/}
                     <TabPanel value={this.state.valueTab} index={2}>
                         <div className={style.wrapChatMenu}>
-                            <LoginWebSocket isAuth={this.props.isAuth} LoginClick={(name: string) => { this.props.loginWsChat(name); window.SendNotification(`${name} вошел`) }} LogOutClick={(name) => { this.props.logoutWsChat(); window.SendNotification((`${name} вышел`)) }} />
+                            <LoginWebSocket isAuth={this.props.isAuth} name={this.props.userNameWsChat} LoginClick={(name: string) => { this.props.loginWsChat(name); window.SendNotification(`${name} вошел`) }} LogOutClick={(name) => { this.props.logoutWsChat(); window.SendNotification((`${name} вышел`)) }} />
                             <RadioButtonBinary className={style.FormChatRB} value={this.props.visibleWsChat} nameTrue={"Показать чат"} nameFalse={"Скрыть чат"} change={(e) => {this.props.changeVisibleWsChat(!this.props.visibleWsChat) }} />
                         </div>
                     </TabPanel>
