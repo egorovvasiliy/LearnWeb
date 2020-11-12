@@ -13,9 +13,8 @@ namespace webPortal.Controllers
 {
     public class SettingsController : LayoutController
     {
-        public SettingsController(IHubContext<NotifyHub, INotifyClient> hubContext) : base(hubContext) { 
-        }
-        //Здесь будут храниться временные методы
+        //public SettingsController(IHubContext<NotifyHub, INotifyClient> hubContext) : base(hubContext) { 
+        //}
         [Authorize]
         public IActionResult GetColorMenu()
         {   

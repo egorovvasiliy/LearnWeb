@@ -1,0 +1,14 @@
+﻿@mixin base {
+    background-color: cadetblue;
+    border: black solid;
+    height: 100%;
+}
+.Login {
+    @include base;
+}
+.Logout {
+    @include base;
+    align-items: center;
+    text-align: center;
+    display: inline-flex;
+}

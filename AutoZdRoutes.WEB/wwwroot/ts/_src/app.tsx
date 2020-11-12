@@ -17,7 +17,8 @@ import { rootStore } from '../redux/store/store'
 import { RootState } from '../redux/reducers/rootreducer';
 import { typeDispatch} from '../redux/types'
 //----------
-import { UserMenu } from '../redux/containers/users_menu'
+import { ChatWindow } from '../redux/components/websocketChat/chat/chatWindow'
+import { UserMenu } from '../redux/containers/user_menu/user_menu'
 import { Map2gis } from '../redux/containers/map2gis/map2gis'
 import { TableStations } from '../redux/containers/tables/tableStations'
 import { TableSchedule } from '../redux/containers/tables/tableSchedule'
@@ -37,7 +38,10 @@ const mapStateToProps = (store: RootState) => {
         visibleScheduleTab: store.maps.visibleScheduleTab,
         isLoading: store.global.isloading,
         selectedStationId: store.maps.selectedStationId,
-        selectedTypeStation: store.maps.typesStation.find(tst => tst.type_id == store.maps.selectedTypeStationId)
+        selectedTypeStation: store.maps.typesStation.find(tst => tst.type_id == store.maps.selectedTypeStationId),
+        isAuthWsChat: store.wsChat.isAuth,
+        visibleChat: store.wsChat.visibleChat,
+        nameWsChat: store.wsChat.username
     }
 };
 const mapDispatchToProps = (dispatch: typeDispatch) => {
@@ -76,6 +80,7 @@ class App extends React.Component<TPropsFromRedux, IState> {
         window.map2gis && window.map2gis.invalidateSize();// Необходимо при динамическом изменении - например добавлении таблицы, которая меняет размер карты
     };
     render() {
+        let divChat = this.props.visibleChat ? <ChatWindow name={this.props.nameWsChat} isLogin={this.props.isAuthWsChat} users={new Array()} /> : null;
         return (
             <React.Fragment>
                 <header className={styleApp.WrapMenu}>
@@ -104,7 +109,10 @@ class App extends React.Component<TPropsFromRedux, IState> {
                                 onDragStarted: () => { this.props.clearStations() },
                                 onSaveSizes: (sizes) => { window.map2gis.invalidateSize(); }
                             }}>
-                            <Map2gis/>
+                            <div className={styleApp.WrapChatAndMap}>
+                                {divChat}
+                                <Map2gis />
+                            </div>
                             <TableSchedule/>
                         </SplitPane>
                         <TableStations/>

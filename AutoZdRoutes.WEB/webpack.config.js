@@ -10,10 +10,10 @@ const { DuplicatesPlugin } = require('inspectpack/plugin');//вдруг в пр�
 let conf = {
     mode: 'development',
     entry: {
-        app: "./wwwroot/ts/src/app.tsx",
+        app: "./wwwroot/ts/_src/app.tsx",
         signalRInitialize: "./wwwroot/ts/signalRInitialize.ts",
         nonAuthorize: "./wwwroot/ts/nonAuthorize.ts",
-        test: "./wwwroot/ts/_not_use/test.ts"
+        test: "./wwwroot/ts/z_not_use/test.ts"
     },
     output: {
         path: path.resolve(__dirname,bundleFolder),

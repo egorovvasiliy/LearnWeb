@@ -17,20 +17,25 @@ import InputIcon from '@material-ui/icons/Input';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import Switch from '@material-ui/core/Switch';
 //--------------------------------------------------------------------
-import Menu from '../components/menu/Menu';
-import RadioButtonBinary from "../components/menu/radioButtonBin"
-import { LoadPointsToJsonAsync, LoadPointsToBDFromJsonAsync } from "../../maps"
-import { Login } from "../components/login/login"
-import { Label_Login } from "../components/label_Login"
-import { Register } from '../components/register';
-import { urlWeb } from "../../constants"
-import { GenerateRandomCallFunc } from '../../testNotify'
+import Menu from '../../components/menu/Menu';
+import RadioButtonBinary from "../../components/menu/radioButtonBin"
+import { LoadPointsToJsonAsync, LoadPointsToBDFromJsonAsync } from "../../../maps"
+import { Login } from "../../components/login/login"
+import { Label_Login } from "../../components/label_Login"
+import { Register } from '../../components/register';
+import { urlWeb } from "../../../constants"
+import { GenerateRandomCallFunc } from '../../../testNotify'
+import { Login as LoginWebSocket } from '../../components/websocketChat/login/login'
 //--------------------------------------------
-import { RootState } from '../reducers/rootreducer';
-import { adminRole, ISettingsState} from '../types';
-import {runLoging_ActTh, runLogOut_ActTh, runRegister_ActTh } from '../actions/authActions';
-import { changeColorAction } from '../actions/settingsActions';
-import { changeVisibleMap_ActCr, changeVisibleStationsTab_ActCr, setTypeStation_ActCr, changeVisibleStaionsOnMap_ActCr } from '../actions/mapsActions';
+import { RootState } from '../../reducers/rootreducer';
+import { adminRole, ISettingsState} from '../../types';
+import { runLoging_ActTh, runLogOut_ActTh, runRegister_ActTh } from '../../actions/authActions';
+import { changeColorAction } from '../../actions/settingsActions';
+import { changeVisibleMap_ActCr, changeVisibleStationsTab_ActCr, setTypeStation_ActCr, changeVisibleStaionsOnMap_ActCr } from '../../actions/mapsActions';
+//--------------------------------
+import * as styles from './style.scss';
+import { changeVisibleWsChatt_ActCr, loginWsChat_ActCr } from '../../actions/wsChatActions';
+const style = styles as ClassUserMenu;
 //#endregion
 //---------------------------------------------
 //#region secondary
@@ -83,6 +88,9 @@ const mapStateToProps = (store: RootState) => {
         username: store.auth.username,
         userrole: store.auth.userrole,
         isAuth: store.auth.isAuth,
+        isAuthWs: store.wsChat.isAuth,
+        visibleWsChat: store.wsChat.visibleChat,
+        userNameWsChat: store.wsChat.username,
         settings: store.settings,
         stations: store.maps.stations,
         typesStation: store.maps.typesStation,
@@ -112,6 +120,15 @@ const mapDispatchToProps = (dispatch) => {
         },
         changeVisibleStationsTab: () => {
             dispatch(changeVisibleStationsTab_ActCr());
+        },
+        changeVisibleWsChat: (val: boolean) => {
+            dispatch(changeVisibleWsChatt_ActCr(val));
+        },
+        loginWsChat: (name:string) => {
+            dispatch(loginWsChat_ActCr(true, name));
+        },
+        logoutWsChat: () => {
+            dispatch(loginWsChat_ActCr(false));
         }
     }
 }
@@ -164,7 +181,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
                     >
                         <Tab label="Карта" {...a11yProps(0)} />
                         <Tab label="Настройки" {...a11yProps(1)} />
-                        <Tab label="Empty1" {...a11yProps(2)} />
+                        <Tab label="WebSocketChat" {...a11yProps(2)} />
                         <Tab label="Empty2" {...a11yProps(3)} />
                         {this.props.userrole != adminRole ?
                             <Tab label="StopUser" {...a11yProps(4)} />
@@ -287,8 +304,12 @@ class _UserMenu extends React.Component<PropsType, TState> {
                             }} />
                         </Menu>
                     </TabPanel>
-                    {/*Empty*/}
+                    {/*WebSocketChat*/}
                     <TabPanel value={this.state.valueTab} index={2}>
+                        <div className={style.wrapChatMenu}>
+                            <LoginWebSocket isAuth={this.props.isAuth} LoginClick={(name: string) => { this.props.loginWsChat(name); window.SendNotification(`${name} вошел`) }} LogOutClick={(name) => { this.props.logoutWsChat(); window.SendNotification((`${name} вышел`)) }} />
+                            <RadioButtonBinary className={style.FormChatRB} value={this.props.visibleWsChat} nameTrue={"Показать чат"} nameFalse={"Скрыть чат"} change={(e) => {this.props.changeVisibleWsChat(!this.props.visibleWsChat) }} />
+                        </div>
                     </TabPanel>
                     {/*Empty*/}
                     <TabPanel value={this.state.valueTab} index={3}>

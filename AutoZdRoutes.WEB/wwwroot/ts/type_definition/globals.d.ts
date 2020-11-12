@@ -1,7 +1,8 @@
 ﻿declare interface Window {
+    webSocket: WebSocket,
     dispatch: any,
     test:any,
-    connectionNotifyHub: signalR.HubConnection,
+    //connectionNotifyHub: signalR.HubConnection,
     initCenter: { lat: number, lng: number },
     map2gis: {
         getBounds: Function,

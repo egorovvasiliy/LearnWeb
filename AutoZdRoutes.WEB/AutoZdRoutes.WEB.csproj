@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\ts\src\app.tsx" />
+    <TypeScriptCompile Include="wwwroot\ts\_src\app.tsx" />
     <TypeScriptCompile Include="wwwroot\ts\crutch\forSplit.ts" />
   </ItemGroup>
 

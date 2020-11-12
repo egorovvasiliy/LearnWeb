@@ -1,0 +1,14 @@
+﻿.wrapVerticalAlign {
+    display:flex;
+    flex-direction:column;
+    justify-content:center
+}
+.closeInput {
+    cursor: pointer;
+    border-radius: 10px;
+}
+.wrapCenter {
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto
+}

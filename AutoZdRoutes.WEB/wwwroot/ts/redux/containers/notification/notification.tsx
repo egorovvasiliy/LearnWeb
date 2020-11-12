@@ -7,8 +7,8 @@
 //*---можно попытаться сделать по другому, принимать в пропсах массив сообщений и далее getDerivedStateFromProps() сравнивал текущий State с props...
 import * as React from "react"
 import * as ReactDOM from "react-dom"
-import * as styleNotification from "./style.scss"  // Параметры задержек только здесь!!!
-const styles = styleNotification as ClassNotification;
+import * as styles from "./style.scss"  // Параметры задержек только здесь!!!
+const style = styles as ClassNotification;
 import { setTimeout } from "timers";
 class Message {
     constructor(_body: string = "", _date: number=Date.now(), _visible: boolean = true) {
@@ -45,7 +45,7 @@ export default class Notifications extends React.Component<IProps, IState> {
     componentDidUpdate = (prevProps: IProps, prevState: IState) => {
         if (this.state.operation == OperationEnum.add)
             setTimeout(() => {
-                this.domMessages.forEach(el => el && el.classList.add(styles.Close));
+                this.domMessages.forEach(el => el && el.classList.add(style.Close));
             }, 100);
         //#Solve: почему в этом же потоке класс цепляется до построения дерева
     }
@@ -71,19 +71,19 @@ export default class Notifications extends React.Component<IProps, IState> {
         this.domMessages = new Array<HTMLDivElement>();
         return (
             <React.Fragment>
-                <div className={styles.WrapFixed}>
+                <div className={style.WrapFixed}>
                     {
                         this.state.messages.map((mes, i) => {
                             let convert = (obj: number) => obj > 9 ? obj.toString() : `0${obj}`;
-                            let addClass = !mes.visible ? styles.Close : "";
+                            let addClass = !mes.visible ? style.Close : "";
                             let date = new Date(mes.date);
                             let hours = convert(date.getHours());
                             let min: any = convert(date.getMinutes());
                             let sec: any = convert(date.getSeconds());
                             return (
-                                <div key={mes.date} className={styles.Notification + ' ' + addClass} ref={el => { el && el.setAttribute('key', mes.date.toString()); el && this.domMessages.push(el); }}>
-                                    <div className={styles.Message}>{mes.body}</div>
-                                    <div className={styles.clBtn} onClick={() => { this.removeMessage(mes.date); }}></div>
+                                <div key={mes.date} className={style.Notification + ' ' + addClass} ref={el => { el && el.setAttribute('key', mes.date.toString()); el && this.domMessages.push(el); }}>
+                                    <div className={style.Message}>{mes.body}</div>
+                                    <div className={style.clBtn} onClick={() => { this.removeMessage(mes.date); }}></div>
                                     <div>{`время: ${hours}:${min}:${sec}`}</div>
                                 </div>)
                             //#Solve:в ref el оказываются Null-ы при изменении состояния даже с учетом key

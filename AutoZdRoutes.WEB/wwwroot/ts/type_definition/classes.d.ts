@@ -8,11 +8,20 @@ declare interface ClassMap {
     Map, myleaflet: string
 }
 declare interface ClassApp {
-    Content, Map, WrapMenu, WrapMap , SplitPane:string
+    Content, Map, WrapMenu, WrapMap , SplitPane, WrapChatAndMap:string
 }
 declare interface ClassMarker {
     MarkerDiv, markerClass, markerFlag, blink: string
 }
 declare interface ClassNotification {
     WrapFixed, Notification, Close, Message, clBtn: string
+}
+declare interface ClassLogin {
+    wrapCenter, closeInput, wrapVerticalAlign:string
+}
+declare interface ClassUserMenu {
+    wrapChatMenu, FormChatRB: string
+}
+declare interface ClassChatWindow {
+    Logout, Login:string
 }

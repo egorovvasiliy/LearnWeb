@@ -5,7 +5,8 @@ interface IProps {
     nameTrue: string,
     nameFalse: string,
     value?: boolean,
-    change?: (e: React.ChangeEvent<HTMLElement>) => void
+    change?: (e: React.ChangeEvent<HTMLElement>) => void,
+    className?:string
 }
 interface IState {
     nameTrue: string,
@@ -30,7 +31,7 @@ export default class RadioButtonBinary extends React.Component<IProps, IState> {
     }
     render() {
         return (
-            <form style={{ mixBlendMode: "luminosity" }}>
+            <form style={{ mixBlendMode: "luminosity" }} className={this.props.className}>
                 <input name="RadioButton" type="radio" defaultChecked={!this.state.value} onChange={this.props.change} />{this.state.nameFalse}
                 <br />
                 <input name="RadioButton" type="radio" defaultChecked={this.state.value} onChange={this.props.change} />{this.state.nameTrue}

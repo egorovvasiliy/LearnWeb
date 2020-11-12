@@ -1,4 +1,9 @@
-﻿.closeInput {
+﻿.wrapCenter {
+    display:flex;
+    flex-wrap:wrap;
+    margin:auto
+}
+.closeInput {
     cursor: pointer;
     border-radius: 10px;
 }

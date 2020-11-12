@@ -20,9 +20,8 @@ namespace webPortal.Controllers
     //[Authorize]
     public class MapsController : LayoutController
     {
-        public MapsController(IHubContext<NotifyHub, INotifyClient> hubContext) : base(hubContext) { 
-        }
-        //Здесь будут храниться временные методы
+        //public MapsController(IHubContext<NotifyHub, INotifyClient> hubContext) : base(hubContext) { 
+        //}
         public IActionResult Index()
         {   
             return View();

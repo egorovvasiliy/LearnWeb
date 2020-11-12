@@ -1,16 +1,22 @@
 ﻿import * as React from 'react';
 import * as styles from './style.css';
-const Login = (props: { isAuth: boolean, LogOutClickAsync: any, LoginClickAsync: any }) => {
+const styleLogin = styles as ClassLogin;
+interface IProps {
+    isAuth: boolean,
+    LogOutClickAsync: any,
+    LoginClickAsync: any 
+}
+const Login = (props: IProps) => {
     let { isAuth, LogOutClickAsync, LoginClickAsync } = props;
     return isAuth ?
         <React.Fragment>
-            <div style={{ display: "flex", flexWrap: "wrap", margin: "auto" }}>
-                <input ref={el => window.inputSubmitLogout = el} onClick={LogOutClickAsync} type="button" value="Выйти / Сменить пользователя" className={styles.closeInput} />
+            <div className={styleLogin.wrapCenter}>
+                <input ref={el => window.inputSubmitLogout = el} onClick={LogOutClickAsync} type="button" value="Выйти / Сменить пользователя" className={styleLogin.closeInput} />
             </div>
         </React.Fragment>
         :
         <React.Fragment>
-            <form ref={el => window.inputFormLogin=el} style={{ display: "flex", flexWrap: "wrap", margin: "auto" }} name="login" method="post" action="#">
+            <form ref={el => window.inputFormLogin = el} className={styleLogin.wrapCenter} name="login" method="post" action="#">
                 <div className="Centered">
                     <b>Введите логин</b>
                     <input ref={el => window.inputValueLoginName = el} type="text" name="login" required />

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoZdRoutes.WEB.Hubs;
 using AutoZdRoutes.WEB.Services;
@@ -9,6 +12,7 @@ using JWT.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +28,6 @@ namespace webPortal
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -33,7 +36,8 @@ namespace webPortal
             services.AddJwtAuthentication();
             services.AddJwtAuthorization();
             services.AddControllersWithViews();
-            services.AddSignalR();
+            services.AddSingleton<ChatService>();
+            //services.AddSignalR();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -49,6 +53,13 @@ namespace webPortal
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            var webSocketOptions = new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+                ReceiveBufferSize = 4 * 1024
+            };
+            app.UseWebSockets(webSocketOptions);
+            app.UseMiddleware<ChatMiddleware>();
             app.UseMiddleware<NonAuthorizedMiddleware>();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -61,7 +72,7 @@ namespace webPortal
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapHub<NotifyHub>("/notify");
+                //endpoints.MapHub<NotifyHub>("/notify");
             });
         }
     }

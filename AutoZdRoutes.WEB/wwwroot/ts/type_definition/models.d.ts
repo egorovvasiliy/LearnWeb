@@ -33,3 +33,7 @@ declare interface ISheduleOnStation {
     days: string,
     departure: string
 }
+declare interface IUser {
+    name: string,
+    id:string
+}

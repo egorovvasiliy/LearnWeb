@@ -21,6 +21,27 @@ interface ILogoutAction {
 export type AuthAction = ILoginAction | ILogoutAction;
 //#endregion Auth
 //---------------------------------------------------
+//#region wsChat
+//----------
+export const typeLogInWsChat = "typeLogInWsChat" as const;
+export const typeChangeVisibleWsChat = "typeChangeVisibleWsChat" as const;
+export interface IWsChatState {
+    isAuth: boolean,
+    username: string,
+    visibleChat: boolean
+}
+interface ILoginWsChatAction {
+    type: typeof typeLogInWsChat,
+    isIn: boolean,
+    username: string,
+}
+interface IChangeVisibleWsChatAction {
+    type: typeof typeChangeVisibleWsChat,
+    val:boolean
+}
+export type WsChatAction = ILoginWsChatAction | IChangeVisibleWsChatAction;
+//#endregion Auth
+//---------------------------------------------------
 //#region Maps
 export const typeSetTypesStation = "typeSetTypesStation" as const;
 export const typeSetStations = "typeSetStations" as const;

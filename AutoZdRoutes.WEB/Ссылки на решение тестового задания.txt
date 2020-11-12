@@ -1,0 +1,2 @@
+﻿https://docs.microsoft.com/ru-ru/aspnet/core/fundamentals/websockets?view=aspnetcore-3.1
+https://github.com/Konard/ASP.NET-Core-WebSocket-Example/blob/master/WebSocketExample/Startup.cs

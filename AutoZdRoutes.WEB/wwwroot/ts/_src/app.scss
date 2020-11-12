@@ -113,6 +113,11 @@ $foot: 45px; // для футера
     flex-grow:1;
     position:relative;
 }
+.WrapChatAndMap{
+    display:flex;
+    height:100%;
+    width:100%
+}
 /*-----------------------------------------------------------*/
 :global .SplitPane {
     position: relative !important; //Костыль
