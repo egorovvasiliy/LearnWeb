@@ -34,6 +34,11 @@ declare interface ISheduleOnStation {
     departure: string
 }
 declare interface IUser {
+    Id?: string,
     Name: string,
-    Status:string
+    Status?:string
+}
+declare interface IMessage {
+    user: IUser,
+    text: string
 }

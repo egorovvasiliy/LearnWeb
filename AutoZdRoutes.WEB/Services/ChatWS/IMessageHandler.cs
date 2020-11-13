@@ -24,37 +24,48 @@ namespace AutoZdRoutes.WEB.Services
         public Object payload { get; set; }
     }
     interface IMessageHandler {
-        void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> connectionsList, ActionRequestWS action);
-        async Task SendAll(WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel>connectionsList)
+        void Handle(WebSocket socket, List<СonnectionModel> connectionsList, ActionRequestWS action);
+        async Task SendAll(ActionResponseWS response, List<СonnectionModel>connectionsList)
         {
+            var response_string = JsonSerializer.Serialize(response);
+            var bytesResponse = Encoding.UTF8.GetBytes(response_string, 0, response_string.Length);
             foreach (var con in connectionsList)
             {
-                await con.Socket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+                await con.Socket.SendAsync(new ArraySegment<byte>(bytesResponse, 0, bytesResponse.Length), WebSocketMessageType.Text, true, CancellationToken.None);//#Solve:!!! длина буфера
             }
+        }
+        async Task Send(ActionResponseWS response, WebSocket socket)
+        {
+            var response_string = JsonSerializer.Serialize(response);
+            var bytesResponse = Encoding.UTF8.GetBytes(response_string, 0, response_string.Length);
+            await socket.SendAsync(new ArraySegment<byte>(bytesResponse, 0, bytesResponse.Length), WebSocketMessageType.Text, true, CancellationToken.None);//#Solve:!!! длина буфера
         }
     }
     class InitUserMessageHandler : IMessageHandler
     {
-        public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> connectionsList, ActionRequestWS action)
+        public void Handle(WebSocket current_socket, List<СonnectionModel> connectionsList, ActionRequestWS action)
         {
             var jsonString = action.payload.ToString();
-            var init_user = JsonSerializer.Deserialize<User>(jsonString);//#Solve:Лучше,конечно, создать отдельный класс модели
-            var con = connectionsList.FirstOrDefault(con => con.Socket == socket);
-            con.User = init_user;
+            var init_user = JsonSerializer.Deserialize<User>(jsonString);
+            init_user.Id = Guid.NewGuid().ToString();
+            var currentConnection = connectionsList.FirstOrDefault(con => con.Socket == current_socket);
+            currentConnection.User = init_user;
+            //---------------------------------------------------------------------------------------------
             var response = new ActionResponseWS() { type = ActioResponseTypes.userIn, payload = init_user };
-            var response_string = JsonSerializer.Serialize(response);
-            var bytesResponse= Encoding.UTF8.GetBytes(response_string, 0, response_string.Length);
-            (this as IMessageHandler).SendAll(result, bytesResponse, connectionsList);
+            (this as IMessageHandler).SendAll(response, connectionsList.Where(con => con.Socket != current_socket).ToList());
+            var users = connectionsList.Select(con => con.User).ToArray();
+            var response2 = new ActionResponseWS() { type = ActioResponseTypes.setActiveUsers, payload = users };
+            (this as IMessageHandler).Send(response2, current_socket);
         }
     }
     class UpdateStatusMessageHandler : IMessageHandler
     {
-        public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> connectionsList, ActionRequestWS action)
+        public void Handle(WebSocket socket, List<СonnectionModel> connectionsList, ActionRequestWS action)
         {
         }
     }
     class MessageAllSend : IMessageHandler {
-        public void Handle(WebSocket socket, WebSocketReceiveResult result, byte[] buffer, List<СonnectionModel> connectionsList, ActionRequestWS action) { 
+        public void Handle(WebSocket socket, List<СonnectionModel> connectionsList, ActionRequestWS action) { 
         }
     }
 }

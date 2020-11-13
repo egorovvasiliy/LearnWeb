@@ -24,22 +24,54 @@ export type AuthAction = ILoginAction | ILogoutAction;
 //#region wsChat
 //----------
 export const typeLogInWsChat = "typeLogInWsChat" as const;
+export const typeSetUsersWsChat = "typeSetUsersWsChat" as const;
+export const typeSetMessagesWsChat = "typeSetMessagesWsChat" as const;
 export const typeChangeVisibleWsChat = "typeChangeVisibleWsChat" as const;
+export const typeConnectUserWsChat = "typeConnectUserWsChat" as const;
+export const typeRemoveUserWsChat = "typeRemoveUserWsChat" as const;
+export const typeUpdateStatusUserWsChat = "typeUpdateStatusUserWsChat" as const;
+export const typeSendMessageWsChat = "typeSendMessageWsChat" as const;
 export interface IWsChatState {
     isAuth: boolean,
-    username: string,
-    visibleChat: boolean
+    currentUser: IUser,
+    visibleChat: boolean,
+    users: Array<IUser>,
+    messages: Array<IMessage>
 }
 interface ILoginWsChatAction {
     type: typeof typeLogInWsChat,
     isIn: boolean,
-    username: string,
+    user: IUser,
 }
 interface IChangeVisibleWsChatAction {
     type: typeof typeChangeVisibleWsChat,
     val:boolean
 }
-export type WsChatAction = ILoginWsChatAction | IChangeVisibleWsChatAction;
+interface ISetUsersWsChat {
+    type: typeof typeSetUsersWsChat,
+    users: Array<IUser>
+}
+interface ISetMessagesWsChat {
+    type: typeof typeSetMessagesWsChat,
+    messages: Array<IMessage>
+}
+interface IConnectUserWsChat {
+    type: typeof typeConnectUserWsChat,
+    user: IUser
+}
+interface IRemoveUserWsChat {
+    type: typeof typeRemoveUserWsChat,
+    id: string
+}
+interface IUpdateStatusUserWsChat {
+    type: typeof typeUpdateStatusUserWsChat,
+    user: IUser
+}
+interface ISendMessageWsChat {
+    type: typeof typeSendMessageWsChat,
+    messages: IMessage
+}
+export type WsChatAction = ILoginWsChatAction | IChangeVisibleWsChatAction | IConnectUserWsChat | IRemoveUserWsChat | IUpdateStatusUserWsChat | ISendMessageWsChat | ISetUsersWsChat | ISetMessagesWsChat;
 //#endregion Auth
 //---------------------------------------------------
 //#region Maps

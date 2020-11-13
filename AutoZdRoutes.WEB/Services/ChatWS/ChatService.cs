@@ -15,17 +15,20 @@ namespace AutoZdRoutes.WEB.Services
 {
     public enum ActionRequestTypes
     {
-        initUser,
-        updateStatus
+        userIn,
+        updateStatus,
+        message
     }
     public enum ActioResponseTypes
     {
         userIn,
         userOut,
-        userSetStatus,
-        message
+        updateStatus,
+        message,
+        setActiveUsers
     }
     public class User {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Status { get; set; }
     }
@@ -37,35 +40,37 @@ namespace AutoZdRoutes.WEB.Services
     }
     public class ChatService
     {
-        List<СonnectionModel> socketsList = new List<СonnectionModel>(); //#Solve: потокобезопасность...
+        List<СonnectionModel> connections = new List<СonnectionModel>(); //#Solve: потокобезопасность...
         public async Task Echo(WebSocket webSocket)
         {
             var buffer = new byte[1024 * 4];//#Solve:как подобрать требуемый размер,почему один буфер на прием и отправку
             WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);//#Solve: какое точное смысловое значение этого result
             while (!result.CloseStatus.HasValue) //#Solve:что если кол-во обращений к текущему webSocket пришло больше одного за время итерации цикла
             {
-                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                IMessageHandler messageHandler;
-                messageHandler = new InitUserMessageHandler();
-                try
-                {
-                    var action = JsonSerializer.Deserialize<ActionRequestWS>(message);
-                    switch (action.type)
+                if (result.MessageType == WebSocketMessageType.Text) {
+                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    IMessageHandler messageHandler;
+                    messageHandler = new InitUserMessageHandler();
+                    try
                     {
-                        case ActionRequestTypes.initUser:
-                            messageHandler = new InitUserMessageHandler();
-                            break;
-                        case ActionRequestTypes.updateStatus:
-                            messageHandler = new UpdateStatusMessageHandler();
-                            break;
-                        default:
-                            break;
+                        var action = JsonSerializer.Deserialize<ActionRequestWS>(message);
+                        switch (action.type)
+                        {
+                            case ActionRequestTypes.userIn:
+                                messageHandler = new InitUserMessageHandler();
+                                break;
+                            case ActionRequestTypes.updateStatus:
+                                messageHandler = new UpdateStatusMessageHandler();
+                                break;
+                            default:
+                                break;
+                        }
+                        messageHandler.Handle(webSocket, connections, action);
                     }
-                    messageHandler.Handle(webSocket,result, buffer, socketsList, action);
-                }
-                catch (Exception ex)
-                {
-                    var x = ex;
+                    catch (Exception ex)
+                    {
+                        var x = ex;
+                    }
                 }
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             }
@@ -74,12 +79,19 @@ namespace AutoZdRoutes.WEB.Services
         }
         public void OnConnected(WebSocket socket)
         {
-            socketsList.Add(new СonnectionModel(){Socket=socket});
+            connections.Add(new СonnectionModel(){Socket=socket});
         }
         public void OnDisconnected(WebSocket socket)
         {
-            var connection = socketsList.FirstOrDefault(p => p.Socket == socket);
-            socketsList.Remove(connection);
+            var connection = connections.FirstOrDefault(con => con.Socket == socket);
+            connections.Remove(connection);
+            //-----------------------------------------
+            var response = new ActionResponseWS() { type = ActioResponseTypes.userOut, payload = connection.User };
+            var response_string = JsonSerializer.Serialize(response);
+            var bytesResponse = Encoding.UTF8.GetBytes(response_string, 0, response_string.Length);
+            foreach (var con in connections) {
+                con.Socket.SendAsync(new ArraySegment<byte>(bytesResponse, 0, bytesResponse.Length), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
         }
        //public async Task SendMessageAsync(WebSocket socket, string message)
        //{
