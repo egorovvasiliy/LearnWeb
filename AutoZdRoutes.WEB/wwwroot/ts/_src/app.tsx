@@ -41,7 +41,9 @@ const mapStateToProps = (store: RootState) => {
         selectedTypeStation: store.maps.typesStation.find(tst => tst.type_id == store.maps.selectedTypeStationId),
         isAuthWsChat: store.wsChat.isAuth,
         visibleChat: store.wsChat.visibleChat,
-        currentUserWsChat: store.wsChat.currentUser
+        currentUserWsChat: store.wsChat.currentUser,
+        usersWsChat: store.wsChat.users,
+        messagesWsChat: store.wsChat.messages
     }
 };
 const mapDispatchToProps = (dispatch: typeDispatch) => {
@@ -80,7 +82,7 @@ class App extends React.Component<TPropsFromRedux, IState> {
         window.map2gis && window.map2gis.invalidateSize();// Необходимо при динамическом изменении - например добавлении таблицы, которая меняет размер карты
     };
     render() {
-        let divChat = this.props.visibleChat ? <ChatWindow name={this.props.currentUserWsChat.Name} isLogin={this.props.isAuthWsChat} users={new Array()} /> : null;
+        let divChat = this.props.visibleChat ? <ChatWindow visibleChat={this.props.visibleChat} currentUser={this.props.currentUserWsChat} isAuth={this.props.isAuthWsChat} users={this.props.usersWsChat} messages={this.props.messagesWsChat} /> : null;
         return (
             <React.Fragment>
                 <header className={styleApp.WrapMenu}>

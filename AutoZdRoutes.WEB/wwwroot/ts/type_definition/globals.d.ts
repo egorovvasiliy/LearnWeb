@@ -15,20 +15,6 @@
     singletonFunction: any,
     SendNotification: (mes: string) => void,
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: any,
-    //#region Refs
-    inputValueLoginName: HTMLInputElement,
-    inputValueLoginPass: HTMLInputElement,
-    inputFormLogin: HTMLFormElement,
-    inputSubmitLogin: HTMLInputElement,
-    inputSubmitLogout: HTMLInputElement,
-    inputSubmitRegister: HTMLInputElement,
-    inputFormRegister: HTMLFormElement,
-    inputValueRegisterName: HTMLInputElement,
-    inputValueRegisterPass: HTMLInputElement,
-    inputValueRegisterPassConf: HTMLInputElement,
-    //------------------------------------------
-    inputValueLoginNameWS: HTMLInputElement
-    //#endregion Refs
 }
 declare enum ActionWSEnum { setName, updateStatus }
 declare module '*.css';

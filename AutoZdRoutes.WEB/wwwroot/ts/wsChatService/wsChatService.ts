@@ -18,6 +18,7 @@ export class WSChatService {
         this.openWebSocket();
 
     }
+
     builder: WSChatBuilder;
     socket: WebSocket;
     GetSocket = () => {

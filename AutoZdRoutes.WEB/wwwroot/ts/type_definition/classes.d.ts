@@ -23,5 +23,5 @@ declare interface ClassUserMenu {
     wrapChatMenu, FormChatRB: string
 }
 declare interface ClassChatWindow {
-    Logout, Login:string
+    Logout, Login, Status, BorderBottom:string
 }

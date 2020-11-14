@@ -2,13 +2,40 @@
     background-color: cadetblue;
     border: black solid;
     height: 100%;
+    width: 500px;
+    input {
+        outline: none;
+
+        &[type="image"] {
+            height: 20px;
+            width: 20px;
+
+            &:hover {
+                height: 25px;
+                width: 25px;
+            }
+        }
+    }
 }
 .Login {
     @include base;
+}
+.Status {
+    background-color: inherit;
+    border:none;
+    color:yellow;
+    font-weight:bold;
 }
 .Logout {
     @include base;
     align-items: center;
     text-align: center;
     display: inline-flex;
+}
+.BorderBottom{
+    border-bottom:solid 1px;
+    padding-bottom:10px;
+    div{
+        font-weight:bold
+    }
 }
