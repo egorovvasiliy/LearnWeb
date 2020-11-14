@@ -67,8 +67,7 @@ export class WSChatService {
                     break;
                 }
                 case ActionsWSTypes.message: {
-                    const { id,message} = actionWs.payload;
-                    this.builder.reciveMessageFromUser(id, message);
+                    this.builder.sendMessage(actionWs.payload);
                     break;
                 }
                 default: {

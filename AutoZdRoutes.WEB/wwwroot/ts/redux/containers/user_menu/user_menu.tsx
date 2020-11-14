@@ -205,11 +205,9 @@ class _UserMenu extends React.Component<PropsType, TState> {
         builder.setActiveUsers = this.props.SetUsersWsChat;
         builder.connectUser = _user => {
             this.props.ConnectUserWsChat(_user);
-            window.SendNotification(`В чат вошел: ${_user.Name}`);
         };
         builder.removeUser = _user => {
             this.props.RemoveUserWsChat(_user.Id);
-            window.SendNotification(`Чат покинул: ${_user.Name}`);
         };
         builder.updateStatusUser = _status => {
             let curUs = this.props.currentUser;
@@ -218,9 +216,8 @@ class _UserMenu extends React.Component<PropsType, TState> {
             let newUsers = this.props.usersWsChat.map(u => u.Id != _status.IdUser ? u : { ...u, Status: _status.Text });
             this.props.SetUsersWsChat(newUsers);
         };
-        builder.reciveMessageFromUser = (_id: string, _message: string) => {
-        };
-        builder.sendMessage = (_text: string) => {
+        builder.sendMessage = (_mes) => {
+            this.props.SendMessageWsChat(_mes);
         };
         return builder;
     }

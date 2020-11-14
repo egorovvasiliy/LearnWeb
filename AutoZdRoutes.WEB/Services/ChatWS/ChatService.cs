@@ -22,6 +22,11 @@ namespace AutoZdRoutes.WEB.Services
         initCurrentUser,
         setActiveUsers
     }
+    public class ActionWS
+    {
+        public ActionsWSTypes type { get; set; }
+        public Object payload { get; set; }
+    }
     public class User {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -30,6 +35,11 @@ namespace AutoZdRoutes.WEB.Services
     public class UpdateStatus
     {
         public string IdUser { get; set; }
+        public string Text { get; set; }
+    }
+    public class Message
+    {
+        public string UserName { get; set; }
         public string Text { get; set; }
     }
     public class СonnectionModel {
@@ -61,6 +71,9 @@ namespace AutoZdRoutes.WEB.Services
                                 break;
                             case ActionsWSTypes.updateStatus:
                                 messageHandler = new UpdateStatusHandler();
+                                break;
+                            case ActionsWSTypes.message:
+                                messageHandler = new MessageHandler();
                                 break;
                             default:
                                 break;

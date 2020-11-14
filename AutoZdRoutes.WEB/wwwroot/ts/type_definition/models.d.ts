@@ -43,6 +43,6 @@ declare interface IStatus {
     Text: string
 }
 declare interface IMessage {
-    user: IUser,
-    text: string
+    UserName: string,
+    Text: string
 }

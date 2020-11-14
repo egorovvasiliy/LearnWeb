@@ -2,7 +2,7 @@
     background-color: cadetblue;
     border: black solid;
     height: 100%;
-    width: 500px;
+    width: 600px;
     input {
         outline: none;
 
@@ -11,20 +11,39 @@
             width: 20px;
 
             &:hover {
-                height: 25px;
-                width: 25px;
+                height: 22px;
+                width: 22px;
             }
         }
     }
 }
 .Login {
     @include base;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.WindowMessages {
+    display: flex;
+    flex: 1;
+    background-color: darkseagreen;
+    flex-direction: column;
+
+    >div {
+        &:nth-child(2n+1) {
+            margin: 0px 10px 0px auto;
+        }
+
+        &:nth-child(2n) {
+            margin: 0px auto 0px 10px;
+        }
+    }
 }
 .Status {
     background-color: inherit;
-    border:none;
-    color:yellow;
-    font-weight:bold;
+    border: none;
+    color: yellow;
+    font-weight: bold;
 }
 .Logout {
     @include base;
@@ -38,4 +57,7 @@
     div{
         font-weight:bold
     }
+}
+.WindowMessages {
+    padding-bottom: 10px;
 }
