@@ -38,6 +38,10 @@ declare interface IUser {
     Name: string,
     Status?:string
 }
+declare interface IStatus {
+    IdUser: string,
+    Text: string
+}
 declare interface IMessage {
     user: IUser,
     text: string

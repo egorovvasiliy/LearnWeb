@@ -1,22 +1,20 @@
 ﻿import { WSChatBuilder } from "./wsMessageBuilder";
-
-enum ActionResponseTypes {
-    userIn,
-    userOut,
+export enum ActionsWSTypes {
+    userConnect,
+    userDisconnect,
     updateStatus,
     message,
+    initCurrentUser,
     setActiveUsers
-};
-
-interface IActionWS {
-    type: ActionResponseTypes,
+}
+export interface IActionWS {
+    type: ActionsWSTypes,
     payload: any
 }
 export class WSChatService {
     constructor(_builder: WSChatBuilder) {
         this.builder = _builder;
         this.openWebSocket();
-
     }
 
     builder: WSChatBuilder;
@@ -29,16 +27,11 @@ export class WSChatService {
     openWebSocket = () => {
         this.socket = this.GetSocket();
         this.socket.onopen = (e) => {
-            this.builder.onOpen && this.builder.onOpen();
-            let user: IUser = {
-                Name: this.builder.name,
-                Status: 'Hey there I am using WhatsApp'
+            let body: IActionWS = {
+                type: ActionsWSTypes.userConnect,
+                payload: this.builder.name
             };
-            let payload: IActionWS = {
-                type: ActionResponseTypes.userIn,
-                payload: user
-            };
-            this.socket.send(JSON.stringify(payload));
+            this.socket.send(JSON.stringify(body));
         };
         this.socket.onclose = e => {
             this.builder.onClose && this.builder.onClose();
@@ -48,31 +41,32 @@ export class WSChatService {
         }
     }
     OnMessage = (e: MessageEvent) => {
+        console.log('OnMessage');
         let actionWs = (<IActionWS>JSON.parse(e.data));
-        console.log('actionWs', actionWs)
+        console.log('actionWs', actionWs);
         if (actionWs) {
             switch (actionWs.type) {
-                case ActionResponseTypes.setActiveUsers: {
-                    const users = actionWs.payload;
-                    this.builder.setActiveUsers(users);
+                case ActionsWSTypes.initCurrentUser: {
+                    this.builder.initCurrentUser(actionWs.payload);
                     break;
                 }
-                case ActionResponseTypes.userIn: {
-                    const user = actionWs.payload;
-                    this.builder.connectUser(user);
+                case ActionsWSTypes.setActiveUsers: {
+                    this.builder.setActiveUsers(actionWs.payload);
                     break;
                 }
-                case ActionResponseTypes.userOut: {
-                    const user = actionWs.payload;
-                    this.builder.removeUser(user);
+                case ActionsWSTypes.userConnect: {
+                    this.builder.connectUser(actionWs.payload);
                     break;
                 }
-                case ActionResponseTypes.updateStatus: {
-                    const user = actionWs.payload;
-                    this.builder.connectUser(user);
+                case ActionsWSTypes.userDisconnect: {
+                    this.builder.removeUser(actionWs.payload);
                     break;
                 }
-                case ActionResponseTypes.message: {
+                case ActionsWSTypes.updateStatus: {
+                    this.builder.updateStatusUser(actionWs.payload);
+                    break;
+                }
+                case ActionsWSTypes.message: {
                     const { id,message} = actionWs.payload;
                     this.builder.reciveMessageFromUser(id, message);
                     break;

@@ -28,13 +28,13 @@ import { GenerateRandomCallFunc } from '../../../testNotify'
 import { LoginWSChat as LoginWebSocket } from '../../components/websocketChat/login/login'
 //--------------------------------------------
 import { RootState } from '../../reducers/rootreducer';
-import { adminRole, ISettingsState} from '../../types';
+import { adminRole, defaultName, ISettingsState} from '../../types';
 import { runLoging_ActTh, runLogOut_ActTh, runRegister_ActTh } from '../../actions/authActions';
 import { changeColorAction } from '../../actions/settingsActions';
 import { changeVisibleMap_ActCr, changeVisibleStationsTab_ActCr, setTypeStation_ActCr, changeVisibleStaionsOnMap_ActCr } from '../../actions/mapsActions';
 //--------------------------------
 import * as styles from './style.scss';
-import { changeVisibleWsChat_ActCr, ConnectUserWsChat_ActCr, loginWsChat_ActCr, RemoveUserWsChat_ActCr, SendMessageWsChat_ActCr, SetMessagesWsChat_ActCr, SetUsersWsChat_ActCr, UpdateStatusUserWsChat_ActCr } from '../../actions/wsChatActions';
+import { changeVisibleWsChat_ActCr, ConnectUserWsChat_ActCr, loginWsChat_ActCr, RemoveUserWsChat_ActCr, SendMessageWsChat_ActCr, SetCurrentUserWsChat_ActCr, SetMessagesWsChat_ActCr, SetUsersWsChat_ActCr, UpdateStatusUserWsChat_ActCr } from '../../actions/wsChatActions';
 const style = styles as ClassUserMenu;
 import { WSChatService } from '../../../wsChatService/wsChatService';
 import { WSChatBuilder } from '../../../wsChatService/wsMessageBuilder';
@@ -99,7 +99,7 @@ const mapStateToProps = (store: RootState) => {
         visibleStationsTab: store.maps.visibleStationsTab,
         isAuthWs: store.wsChat.isAuth,
         visibleWsChat: store.wsChat.visibleChat,
-        userNameWsChat: store.wsChat.currentUser,
+        currentUser: store.wsChat.currentUser,
         usersWsChat: store.wsChat.users,
         messagesWsChat: store.wsChat.messages
     }
@@ -128,11 +128,17 @@ const mapDispatchToProps = (dispatch) => {
         changeVisibleWsChat: (val: boolean) => {
             dispatch(changeVisibleWsChat_ActCr(val));
         },
-        loginWsChat: (user:IUser) => {
-            dispatch(loginWsChat_ActCr(true, user));
+        loginWsChat: (user?: IUser) => {
+            if (user)
+                dispatch(loginWsChat_ActCr(true, user));
+            else 
+                dispatch(loginWsChat_ActCr(true));
         },
         logoutWsChat: () => {
             dispatch(loginWsChat_ActCr(false));
+        },
+        SetCurrentUserWsChat: (user: IUser) => {
+            dispatch(SetCurrentUserWsChat_ActCr(user))
         },
         SetUsersWsChat: (users: Array<IUser>) => {
             dispatch(SetUsersWsChat_ActCr(users))
@@ -194,18 +200,23 @@ class _UserMenu extends React.Component<PropsType, TState> {
         let builder = new WSChatBuilder();
         builder.name = _name;
         builder.urlWs = urlWs;
-        builder.onOpen = () => { this.props.loginWsChat({ Name: _name, Status: 'Hey there I am using WhatsApp'}); }
-        builder.onClose = () => { this.props.logoutWsChat(); }
-        builder.setActiveUsers = (_users) => { this.props.SetUsersWsChat(_users) }
-        builder.connectUser = (_user: IUser) => {
+        builder.onClose = this.props.logoutWsChat;
+        builder.initCurrentUser = this.props.SetCurrentUserWsChat;
+        builder.setActiveUsers = this.props.SetUsersWsChat;
+        builder.connectUser = _user => {
             this.props.ConnectUserWsChat(_user);
             window.SendNotification(`В чат вошел: ${_user.Name}`);
         };
-        builder.removeUser = (_user: IUser) => {
+        builder.removeUser = _user => {
             this.props.RemoveUserWsChat(_user.Id);
             window.SendNotification(`Чат покинул: ${_user.Name}`);
         };
-        builder.updateStatusUser = (_id: string, _newStatus: string)=>{
+        builder.updateStatusUser = _status => {
+            let curUs = this.props.currentUser;
+            if (curUs.Id == _status.IdUser)
+                this.props.SetCurrentUserWsChat({ ...curUs, Status: _status.Text });
+            let newUsers = this.props.usersWsChat.map(u => u.Id != _status.IdUser ? u : { ...u, Status: _status.Text });
+            this.props.SetUsersWsChat(newUsers);
         };
         builder.reciveMessageFromUser = (_id: string, _message: string) => {
         };
@@ -215,6 +226,8 @@ class _UserMenu extends React.Component<PropsType, TState> {
     }
     loginWSChat = (_name: string) => {
         this.wsService = new WSChatService(this.configureWSChatBuilder(_name));
+        window.wsService = this.wsService;
+        this.props.loginWsChat({ Name: defaultName, Id:"", Status:"" });
     }
     logoutWSChat = (name: string) => {
         this.wsService.socket.close();
@@ -362,7 +375,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
                     {/*WebSocketChat*/}
                     <TabPanel value={this.state.valueTab} index={2}>
                         <div className={style.wrapChatMenu}>
-                            <LoginWebSocket isAuth={this.props.isAuthWs} name={this.props.userNameWsChat.Name} LoginClick={this.loginWSChat} LogOutClick={this.logoutWSChat} />
+                            <LoginWebSocket isAuth={this.props.isAuthWs} name={this.props.currentUser.Name} LoginClick={this.loginWSChat} LogOutClick={this.logoutWSChat} />
                             <RadioButtonBinary className={style.FormChatRB} value={this.props.visibleWsChat} nameTrue={"Показать чат"} nameFalse={"Скрыть чат"} change={(e) => {this.props.changeVisibleWsChat(!this.props.visibleWsChat) }} />
                         </div>
                     </TabPanel>

@@ -1,5 +1,5 @@
 ﻿declare interface Window {
-    webSocket: WebSocket,
+    wsService: any,
     dispatch: any,
     test:any,
     //connectionNotifyHub: signalR.HubConnection,
@@ -16,6 +16,5 @@
     SendNotification: (mes: string) => void,
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: any,
 }
-declare enum ActionWSEnum { setName, updateStatus }
 declare module '*.css';
 declare module '*.scss';

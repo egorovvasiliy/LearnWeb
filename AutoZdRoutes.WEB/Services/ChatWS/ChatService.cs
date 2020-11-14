@@ -13,24 +13,24 @@ using System.Threading.Tasks;
 
 namespace AutoZdRoutes.WEB.Services
 {
-    public enum ActionRequestTypes
+    public enum ActionsWSTypes
     {
-        userIn,
-        updateStatus,
-        message
-    }
-    public enum ActioResponseTypes
-    {
-        userIn,
-        userOut,
+        userConnect,
+        userDisconnect,
         updateStatus,
         message,
+        initCurrentUser,
         setActiveUsers
     }
     public class User {
         public string Id { get; set; }
         public string Name { get; set; }
         public string Status { get; set; }
+    }
+    public class UpdateStatus
+    {
+        public string IdUser { get; set; }
+        public string Text { get; set; }
     }
     public class СonnectionModel {
         public СonnectionModel() {
@@ -43,29 +43,29 @@ namespace AutoZdRoutes.WEB.Services
         List<СonnectionModel> connections = new List<СonnectionModel>(); //#Solve: потокобезопасность...
         public async Task Echo(WebSocket webSocket)
         {
+            OnConnected(webSocket);
             var buffer = new byte[1024 * 4];//#Solve:как подобрать требуемый размер,почему один буфер на прием и отправку
             WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);//#Solve: какое точное смысловое значение этого result
             while (!result.CloseStatus.HasValue) //#Solve:что если кол-во обращений к текущему webSocket пришло больше одного за время итерации цикла
             {
                 if (result.MessageType == WebSocketMessageType.Text) {
                     var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    IMessageHandler messageHandler;
-                    messageHandler = new InitUserMessageHandler();
+                    IMessageHandler messageHandler= new EmptyHandler();
                     try
                     {
-                        var action = JsonSerializer.Deserialize<ActionRequestWS>(message);
-                        switch (action.type)
+                        var actionWs = JsonSerializer.Deserialize<ActionWS>(message);
+                        switch (actionWs.type)
                         {
-                            case ActionRequestTypes.userIn:
-                                messageHandler = new InitUserMessageHandler();
+                            case ActionsWSTypes.userConnect:
+                                messageHandler = new UserConnectHandler();
                                 break;
-                            case ActionRequestTypes.updateStatus:
-                                messageHandler = new UpdateStatusMessageHandler();
+                            case ActionsWSTypes.updateStatus:
+                                messageHandler = new UpdateStatusHandler();
                                 break;
                             default:
                                 break;
                         }
-                        messageHandler.Handle(webSocket, connections, action);
+                        messageHandler.Handle(webSocket, connections, actionWs);
                     }
                     catch (Exception ex)
                     {
@@ -79,14 +79,18 @@ namespace AutoZdRoutes.WEB.Services
         }
         public void OnConnected(WebSocket socket)
         {
-            connections.Add(new СonnectionModel(){Socket=socket});
+            //позже дополнительным запросом client установит имя,GUID и известит об этом всех, в т.ч. себя
+            connections.Add(new СonnectionModel(){
+                Socket=socket,
+                User=new User()
+            });
         }
         public void OnDisconnected(WebSocket socket)
         {
             var connection = connections.FirstOrDefault(con => con.Socket == socket);
             connections.Remove(connection);
             //-----------------------------------------
-            var response = new ActionResponseWS() { type = ActioResponseTypes.userOut, payload = connection.User };
+            var response = new ActionWS() { type = ActionsWSTypes.userDisconnect, payload = connection.User };
             var response_string = JsonSerializer.Serialize(response);
             var bytesResponse = Encoding.UTF8.GetBytes(response_string, 0, response_string.Length);
             foreach (var con in connections) {

@@ -24,6 +24,7 @@ export type AuthAction = ILoginAction | ILogoutAction;
 //#region wsChat
 //----------
 export const typeLogInWsChat = "typeLogInWsChat" as const;
+export const typeSetCurrentUserWsChat = "typeSetCurrentUserWsChat" as const;
 export const typeSetUsersWsChat = "typeSetUsersWsChat" as const;
 export const typeSetMessagesWsChat = "typeSetMessagesWsChat" as const;
 export const typeChangeVisibleWsChat = "typeChangeVisibleWsChat" as const;
@@ -46,6 +47,10 @@ interface ILoginWsChatAction {
 interface IChangeVisibleWsChatAction {
     type: typeof typeChangeVisibleWsChat,
     val:boolean
+}
+interface ISetCurrentUserWsChat {
+    type: typeof typeSetCurrentUserWsChat,
+    user: IUser
 }
 interface ISetUsersWsChat {
     type: typeof typeSetUsersWsChat,
@@ -71,7 +76,9 @@ interface ISendMessageWsChat {
     type: typeof typeSendMessageWsChat,
     messages: IMessage
 }
-export type WsChatAction = ILoginWsChatAction | IChangeVisibleWsChatAction | IConnectUserWsChat | IRemoveUserWsChat | IUpdateStatusUserWsChat | ISendMessageWsChat | ISetUsersWsChat | ISetMessagesWsChat;
+export type WsChatAction = ILoginWsChatAction | IChangeVisibleWsChatAction | IConnectUserWsChat
+    | IRemoveUserWsChat | IUpdateStatusUserWsChat | ISendMessageWsChat | ISetUsersWsChat
+    | ISetMessagesWsChat | ISetCurrentUserWsChat;
 //#endregion Auth
 //---------------------------------------------------
 //#region Maps

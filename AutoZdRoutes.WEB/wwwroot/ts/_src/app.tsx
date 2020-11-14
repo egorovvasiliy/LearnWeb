@@ -27,6 +27,7 @@ import {setStations_ActCr } from '../redux/actions/mapsActions';
 import { didMountApp_ActTh } from '../redux/actions/globalActions'
 import { InitializeAppRun } from '../initialize';
 import { ResizeSplitTabStations, ResizeSplitTabSchedule } from '../crutch/forSplit';
+import { SendMessageWsChat_ActCr, UpdateStatusUserWsChat_ActCr } from '../redux/actions/wsChatActions';
 //#endregion Import
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
@@ -43,7 +44,7 @@ const mapStateToProps = (store: RootState) => {
         visibleChat: store.wsChat.visibleChat,
         currentUserWsChat: store.wsChat.currentUser,
         usersWsChat: store.wsChat.users,
-        messagesWsChat: store.wsChat.messages
+        messagesWsChat: store.wsChat.messages,
     }
 };
 const mapDispatchToProps = (dispatch: typeDispatch) => {

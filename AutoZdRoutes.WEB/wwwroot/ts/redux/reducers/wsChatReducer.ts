@@ -2,7 +2,8 @@
 import {
     IWsChatState, defaultName, WsChatAction, typeLogInWsChat, typeChangeVisibleWsChat, typeSetUsersWsChat,
     typeConnectUserWsChat, typeRemoveUserWsChat, typeUpdateStatusUserWsChat, typeSendMessageWsChat,
-    typeSetMessagesWsChat
+    typeSetMessagesWsChat,
+    typeSetCurrentUserWsChat
 } from '../types'
 //-----------------
 const initialState = (): IWsChatState => ({
@@ -23,6 +24,9 @@ export function wsChatReducer(state: IWsChatState = initialState(), action: WsCh
         case typeSetMessagesWsChat: {
             return { ...state, messages: action.messages }
         }
+        case typeSetCurrentUserWsChat: {
+            return { ...state, currentUser: action.user }
+        }
         case typeSetUsersWsChat: {
             return { ...state, users: action.users }
         }
@@ -35,7 +39,9 @@ export function wsChatReducer(state: IWsChatState = initialState(), action: WsCh
             return { ...state, users: new_users }
         }
         case typeUpdateStatusUserWsChat: {
-            let new_users = [...state.users].map(u => u.Id != action.user.Id ? u : action.user);
+            console.log('typeUpdateStatusUserWsChat', action.user);
+            let new_users = [...state.users].map(u => u.Id == action.user.Id ? action.user : u);
+            console.log('new_users', new_users);
             return { ...state, users: new_users }
         }
         case typeSendMessageWsChat: {

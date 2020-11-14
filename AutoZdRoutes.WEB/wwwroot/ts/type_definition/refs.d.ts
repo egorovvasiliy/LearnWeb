@@ -11,6 +11,7 @@
     inputValueRegisterPassConf: HTMLInputElement,
     //------------------------------------------
     inputValueLoginNameWS: HTMLInputElement,
-    inputValueStatusWS: HTMLInputElement
+    inputValueStatusWS: HTMLInputElement,
+    inputValueMessageWS: HTMLInputElement
     //------------------------------------------
 }

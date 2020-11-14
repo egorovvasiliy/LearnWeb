@@ -26,7 +26,6 @@ namespace AutoZdRoutes.WEB.Services
                 {
                     using (WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync())
                     {
-                        chatservice.OnConnected(webSocket);
                         await chatservice.Echo(webSocket);
                     }
                 }
