@@ -23,5 +23,5 @@ https://api.2gis.ru/doc/maps/ru/quickstart/
 https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleVideo.mp4
 8. есть небольшой чатик WebSocket:
 см. первые 2 минуты видео.
-*-видео оказалось обрезаным по краям, но это особо не мешает смотреть чат
 https://www.youtube.com/watch?v=F_tB7JsLFWQ&feature=youtu.be
+*-видео оказалось обрезаным по краям,из-за этого не видно имен пользователей сайта(не пользователей чата), а также не видно на какие ресурсы обычному пользователю доступ запрещен, а админу разрешен 
