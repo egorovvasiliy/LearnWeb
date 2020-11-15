@@ -3,7 +3,7 @@ import * as styles from './style.scss';
 const style = styles as ClassChatWindow;
 import { defaultName, IWsChatState } from '../../../types'
 import { WSChatService, ActionsWSTypes, IActionWS } from '../../../../wsChatService/wsChatService';
-import { ConvertDate, GetCurrentTimeDateToString } from '../../../../date';
+import { GetCurrentTimeDateToString } from '../../../../date';
 interface IProps {
 }
 const ChatWindow = (props: IProps & IWsChatState) => {

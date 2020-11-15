@@ -83,7 +83,7 @@ namespace AutoZdRoutes.WEB.Services
                     }
                     catch (Exception ex)
                     {
-                        var x = ex;
+                        var x = ex;//#Solve: придумать тип обработки
                     }
                 }
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
