@@ -1,4 +1,4 @@
-﻿export class WSChatBuilder {
+﻿export class AppClient {
     constructor() {
     }
     name: string;

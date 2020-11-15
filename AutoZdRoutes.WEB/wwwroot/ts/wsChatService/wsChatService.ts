@@ -1,4 +1,4 @@
-﻿import { WSChatBuilder } from "./wsMessageBuilder";
+﻿import { AppClient } from "./AppClient";
 export enum ActionsWSTypes {
     userConnect,
     userDisconnect,
@@ -12,16 +12,16 @@ export interface IActionWS {
     payload: any
 }
 export class WSChatService {
-    constructor(_builder: WSChatBuilder) {
-        this.builder = _builder;
+    constructor(_appClient: AppClient) {
+        this.appClient = _appClient;
         this.openWebSocket();
     }
 
-    builder: WSChatBuilder;
+    appClient: AppClient;
     socket: WebSocket;
     GetSocket = () => {
         if (!this.socket)
-            this.socket = new WebSocket(this.builder.urlWs);
+            this.socket = new WebSocket(this.appClient.urlWs);
         return this.socket;
     }
     openWebSocket = () => {
@@ -29,12 +29,12 @@ export class WSChatService {
         this.socket.onopen = (e) => {
             let body: IActionWS = {
                 type: ActionsWSTypes.userConnect,
-                payload: this.builder.name
+                payload: this.appClient.name
             };
             this.socket.send(JSON.stringify(body));
         };
         this.socket.onclose = e => {
-            this.builder.onClose && this.builder.onClose();
+            this.appClient.onClose && this.appClient.onClose();
         }
         this.socket.onmessage = (e) => {
             this.OnMessage(e);
@@ -47,27 +47,27 @@ export class WSChatService {
         if (actionWs) {
             switch (actionWs.type) {
                 case ActionsWSTypes.initCurrentUser: {
-                    this.builder.initCurrentUser(actionWs.payload);
+                    this.appClient.initCurrentUser(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.setActiveUsers: {
-                    this.builder.setActiveUsers(actionWs.payload);
+                    this.appClient.setActiveUsers(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.userConnect: {
-                    this.builder.connectUser(actionWs.payload);
+                    this.appClient.connectUser(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.userDisconnect: {
-                    this.builder.removeUser(actionWs.payload);
+                    this.appClient.removeUser(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.updateStatus: {
-                    this.builder.updateStatusUser(actionWs.payload);
+                    this.appClient.updateStatusUser(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.message: {
-                    this.builder.sendMessage(actionWs.payload);
+                    this.appClient.sendMessage(actionWs.payload);
                     break;
                 }
                 default: {

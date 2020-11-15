@@ -37,7 +37,7 @@ import * as styles from './style.scss';
 import { changeVisibleWsChat_ActCr, ConnectUserWsChat_ActCr, loginWsChat_ActCr, RemoveUserWsChat_ActCr, SendMessageWsChat_ActCr, SetCurrentUserWsChat_ActCr, SetMessagesWsChat_ActCr, SetUsersWsChat_ActCr, UpdateStatusUserWsChat_ActCr } from '../../actions/wsChatActions';
 const style = styles as ClassUserMenu;
 import { WSChatService } from '../../../wsChatService/wsChatService';
-import { WSChatBuilder } from '../../../wsChatService/wsMessageBuilder';
+import { AppClient } from '../../../wsChatService/AppClient';
 //#endregion
 //---------------------------------------------
 //#region secondary
@@ -196,34 +196,34 @@ class _UserMenu extends React.Component<PropsType, TState> {
         this.props.SetTypeStation(typeId);
     }
     wsService: WSChatService;
-    configureWSChatBuilder = (_name:string) => {
-        let builder = new WSChatBuilder();
-        builder.name = _name;
-        builder.urlWs = urlWs;
-        builder.onClose = this.props.logoutWsChat;
-        builder.initCurrentUser = this.props.SetCurrentUserWsChat;
-        builder.setActiveUsers = this.props.SetUsersWsChat;
-        builder.connectUser = _user => {
+    buildAppClientForWSChatServise = (_name:string) => {
+        let appClient = new AppClient();
+        appClient.name = _name;
+        appClient.urlWs = urlWs;
+        appClient.onClose = this.props.logoutWsChat;
+        appClient.initCurrentUser = this.props.SetCurrentUserWsChat;
+        appClient.setActiveUsers = this.props.SetUsersWsChat;
+        appClient.connectUser = _user => {
             this.props.ConnectUserWsChat(_user);
         };
-        builder.removeUser = _user => {
+        appClient.removeUser = _user => {
             this.props.RemoveUserWsChat(_user.Id);
         };
-        builder.updateStatusUser = _status => {
+        appClient.updateStatusUser = _status => {
             let curUs = this.props.currentUser;
             if (curUs.Id == _status.IdUser)
                 this.props.SetCurrentUserWsChat({ ...curUs, Status: _status.Text });
             let newUsers = this.props.usersWsChat.map(u => u.Id != _status.IdUser ? u : { ...u, Status: _status.Text });
             this.props.SetUsersWsChat(newUsers);
         };
-        builder.sendMessage = (_mes) => {
+        appClient.sendMessage = (_mes) => {
             this.props.SendMessageWsChat(_mes);
         };
-        return builder;
+        return appClient;
     }
     loginWSChat = (_name: string) => {
-        this.wsService = new WSChatService(this.configureWSChatBuilder(_name));
-        window.wsService = this.wsService;
+        this.wsService = new WSChatService(this.buildAppClientForWSChatServise(_name));
+        window.wsService = this.wsService;//#Solve: лучше занести в Store
         this.props.loginWsChat({ Name: defaultName, Id:"", Status:"" });
     }
     logoutWSChat = () => {
