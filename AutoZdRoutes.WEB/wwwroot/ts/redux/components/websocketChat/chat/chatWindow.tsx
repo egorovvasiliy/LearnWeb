@@ -3,6 +3,7 @@ import * as styles from './style.scss';
 const style = styles as ClassChatWindow;
 import { defaultName, IWsChatState } from '../../../types'
 import { WSChatService, ActionsWSTypes, IActionWS } from '../../../../wsChatService/wsChatService';
+import { ConvertDate } from '../../../../date';
 interface IProps {
 }
 const ChatWindow = (props: IProps & IWsChatState) => {
@@ -24,9 +25,9 @@ const ChatWindow = (props: IProps & IWsChatState) => {
     };
     return isAuth ?
         <div className={style.Login}>
-            <div style={{ display: "flex", flexDirection: 'column', flex:1 }}>
+            <div style={{ display: "flex", flexDirection: 'column', flex: 1 }}>
                 <div className={style.BorderBottom}>
-                    <b>Ваше имя в чате: <span className={style.Status}>{currentUser ? currentUser.Name : defaultName}</span></b><br />
+                    <b>Ваше имя в чате: <span style={{ color: 'darkblue' }} className={style.Status}>{currentUser ? currentUser.Name : defaultName}</span></b><br />
                     <div style={{ display: 'inline-flex' }}>
                         <b>{`Статус:`}</b>
                         <input type="image" src={"icons/update.png"} onClick={e => { updateStatus(window.inputValueStatusWS.value) }} />
@@ -36,19 +37,22 @@ const ChatWindow = (props: IProps & IWsChatState) => {
                 <div className={style.BorderBottom}>
                     <b>В чате участвуют:</b><br />
                     {users.map(u => <div key={u.Id}>
-                        {`${u.Name}: `}
-                        <span style={{ fontWeight: 'normal' }} className={style.Status}>{u.Status}</span>
+                        <span style={{ fontWeight: 'normal', color: 'red' }} className={style.Status}>{`${u.Name}:`}</span>
+                        <span style={{ fontWeight: 'normal'}} className={style.Status}>{u.Status}</span>
                     </div>)}
                 </div>
+            {/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/}
                 <div className={style.WindowMessages}>
-                    {messages.map((mes,i) =>
+                    {
+                        messages.map((mes, i) =>
                         <div key={i}>
-                            <div style={{ color: 'darkcyan' }}>{mes.UserName}</div>
+                            <div style={{ color: 'darkcyan' }}>{`${mes.UserName}`}</div>
                             <div>{mes.Text}</div>
                         </div>
                     )}
                 </div>
             </div>
+            {/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/}
             <div style={{ paddingBottom:"10px" }}>
                 <div style={{ display: 'inline-flex' }}>
                     <b>{`Введите сообщение:`}</b>
@@ -56,6 +60,7 @@ const ChatWindow = (props: IProps & IWsChatState) => {
                     <input className={style.Status} onFocusCapture={(e) => { if (window.inputValueMessageWS.value=="...") window.inputValueMessageWS.value = "" }} defaultValue={"..."} ref={el => window.inputValueMessageWS = el} type="text" size={30} />
                 </div>
             </div>
+            {/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/}
         </div>
         :
         <div className={style.Logout}>Для просмотра чата нужно ввести логин</div>

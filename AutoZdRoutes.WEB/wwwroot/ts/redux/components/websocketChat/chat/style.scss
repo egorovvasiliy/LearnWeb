@@ -42,14 +42,13 @@
 .Status {
     background-color: inherit;
     border: none;
-    color: yellow;
+    color: aqua;
     font-weight: bold;
 }
 .Logout {
     @include base;
-    align-items: center;
     text-align: center;
-    display: inline-flex;
+    padding-top:30px;
 }
 .BorderBottom{
     border-bottom:solid 1px;

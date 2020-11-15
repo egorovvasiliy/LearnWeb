@@ -10,6 +10,7 @@ import * as ReactDOM from "react-dom"
 import * as styles from "./style.scss"  // Параметры задержек только здесь!!!
 const style = styles as ClassNotification;
 import { setTimeout } from "timers";
+import { ConvertDate } from "../../../date";
 class Message {
     constructor(_body: string = "", _date: number=Date.now(), _visible: boolean = true) {
         this.body = _body;
@@ -74,12 +75,8 @@ export default class Notifications extends React.Component<IProps, IState> {
                 <div className={style.WrapFixed}>
                     {
                         this.state.messages.map((mes, i) => {
-                            let convert = (obj: number) => obj > 9 ? obj.toString() : `0${obj}`;
                             let addClass = !mes.visible ? style.Close : "";
-                            let date = new Date(mes.date);
-                            let hours = convert(date.getHours());
-                            let min: any = convert(date.getMinutes());
-                            let sec: any = convert(date.getSeconds());
+                            const { hours, min, sec } = ConvertDate(new Date(mes.date));
                             return (
                                 <div key={mes.date} className={style.Notification + ' ' + addClass} ref={el => { el && el.setAttribute('key', mes.date.toString()); el && this.domMessages.push(el); }}>
                                     <div className={style.Message}>{mes.body}</div>

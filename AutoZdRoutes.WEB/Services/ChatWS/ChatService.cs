@@ -54,8 +54,8 @@ namespace AutoZdRoutes.WEB.Services
         public async Task Echo(WebSocket webSocket)
         {
             OnConnected(webSocket);
-            var buffer = new byte[1024 * 4];//#Solve:как подобрать требуемый размер,почему один буфер на прием и отправку
-            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);//#Solve: какое точное смысловое значение этого result
+            var buffer = new byte[1024];
+            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             while (!result.CloseStatus.HasValue) //#Solve:что если кол-во обращений к текущему webSocket пришло больше одного за время итерации цикла
             {
                 if (result.MessageType == WebSocketMessageType.Text) {
