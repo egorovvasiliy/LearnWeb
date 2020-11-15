@@ -8,20 +8,20 @@ interface IProps {
 }
 const ChatWindow = (props: IProps & IWsChatState) => {
     let { isAuth, currentUser, users, messages } = props;
-    const wsService = window.wsService as WSChatService;
+    const wsService = window.wsService as WSChatService;//#Solve: позже сокет запишу в store, вынесу его из компонента и буду работать с ним через props
     const updateStatus = (_text: string) => {
         let body: IActionWS = {
             type: ActionsWSTypes.updateStatus,
             payload: _text
         }
-        wsService.socket.send(JSON.stringify(body));
+        wsService.socket.send(JSON.stringify(body));//#Solve: позже сокет запишу в store, вынесу его из компонента и буду работать с ним через props
     };
     const sendMessage = (_text: string) => {
         let body: IActionWS = {
             type: ActionsWSTypes.message,
             payload: _text
         }
-        wsService.socket.send(JSON.stringify(body));
+        wsService.socket.send(JSON.stringify(body));//#Solve: позже сокет запишу в store, вынесу его из компонента и буду работать с ним через props
     };
     return isAuth ?
         <div className={style.Login}>

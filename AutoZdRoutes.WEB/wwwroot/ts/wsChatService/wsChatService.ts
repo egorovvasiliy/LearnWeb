@@ -41,9 +41,9 @@ export class WSChatService {
         }
     }
     OnMessage = (e: MessageEvent) => {
-        console.log('OnMessage');
+        console.log('OnMessageSocket');
         let actionWs = (<IActionWS>JSON.parse(e.data));
-        console.log('actionWs', actionWs);
+        console.log('actionWebSocket', actionWs);
         if (actionWs) {
             switch (actionWs.type) {
                 case ActionsWSTypes.initCurrentUser: {
