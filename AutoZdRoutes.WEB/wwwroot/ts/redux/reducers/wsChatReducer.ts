@@ -39,9 +39,7 @@ export function wsChatReducer(state: IWsChatState = initialState(), action: WsCh
             return { ...state, users: new_users }
         }
         case typeUpdateStatusUserWsChat: {
-            console.log('typeUpdateStatusUserWsChat', action.user);
             let new_users = [...state.users].map(u => u.Id == action.user.Id ? action.user : u);
-            console.log('new_users', new_users);
             return { ...state, users: new_users }
         }
         case typeSendMessageWsChat: {

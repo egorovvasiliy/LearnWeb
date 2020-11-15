@@ -226,7 +226,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
         window.wsService = this.wsService;
         this.props.loginWsChat({ Name: defaultName, Id:"", Status:"" });
     }
-    logoutWSChat = (name: string) => {
+    logoutWSChat = () => {
         this.wsService.socket.close();
         this.props.logoutWsChat();
         this.props.SetUsersWsChat(new Array<IUser>());

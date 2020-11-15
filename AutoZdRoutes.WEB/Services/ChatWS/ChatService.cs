@@ -39,8 +39,9 @@ namespace AutoZdRoutes.WEB.Services
     }
     public class Message
     {
-        public string UserName { get; set; }
+        public User User { get; set; }
         public string Text { get; set; }
+        public double Date { get; set; }
     }
     public class СonnectionModel {
         public СonnectionModel() {

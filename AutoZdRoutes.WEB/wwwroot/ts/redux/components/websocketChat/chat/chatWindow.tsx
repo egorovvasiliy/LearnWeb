@@ -3,7 +3,7 @@ import * as styles from './style.scss';
 const style = styles as ClassChatWindow;
 import { defaultName, IWsChatState } from '../../../types'
 import { WSChatService, ActionsWSTypes, IActionWS } from '../../../../wsChatService/wsChatService';
-import { ConvertDate } from '../../../../date';
+import { ConvertDate, GetCurrentTimeDateToString } from '../../../../date';
 interface IProps {
 }
 const ChatWindow = (props: IProps & IWsChatState) => {
@@ -45,8 +45,8 @@ const ChatWindow = (props: IProps & IWsChatState) => {
                 <div className={style.WindowMessages}>
                     {
                         messages.map((mes, i) =>
-                        <div key={i}>
-                            <div style={{ color: 'darkcyan' }}>{`${mes.UserName}`}</div>
+                            <div key={i}>
+                                <div style={{ color: mes.User.Id == currentUser.Id ? 'darkcyan' :'#7f7fbb' }}>{`${mes.User.Id == currentUser.Id? 'Вы' : mes.User.Name}:${GetCurrentTimeDateToString(mes.Date)}`}</div>
                             <div>{mes.Text}</div>
                         </div>
                     )}

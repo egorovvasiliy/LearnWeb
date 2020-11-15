@@ -7,7 +7,7 @@
         sec: convert(date.getSeconds())
     }
 }
-export const GetCurrentTimeDateToString = () => {
-    let date = ConvertDate(Date.now());
+export const GetCurrentTimeDateToString = (_date: number | Date) => {
+    let date = ConvertDate(_date);
     return `${date.hours}:${date.min}:${date.sec}`
 }
