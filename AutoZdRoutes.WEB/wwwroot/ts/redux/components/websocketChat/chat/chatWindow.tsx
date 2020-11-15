@@ -30,8 +30,8 @@ const ChatWindow = (props: IProps & IWsChatState) => {
                     <b>Ваше имя в чате: <span style={{ color: 'darkblue' }} className={style.Status}>{currentUser ? currentUser.Name : defaultName}</span></b><br />
                     <div style={{ display: 'inline-flex' }}>
                         <b>{`Статус:`}</b>
-                        <input type="image" src={"icons/update.png"} onClick={e => { updateStatus(window.inputValueStatusWS.value) }} />
-                        <input className={style.Status} defaultValue={currentUser ? currentUser.Status : ""} ref={el => window.inputValueStatusWS = el} type="text" size={30} />
+                        <input type="image" src={"icons/update.png"} onClick={e => { updateStatus(window.inputValueStatusWS.value) }}/>
+                        <input className={style.Status} defaultValue={currentUser ? currentUser.Status : ""} ref={el => window.inputValueStatusWS = el} type="text" size={30} maxLength={30}/>
                     </div>
                 </div>
                 <div className={style.BorderBottom}>

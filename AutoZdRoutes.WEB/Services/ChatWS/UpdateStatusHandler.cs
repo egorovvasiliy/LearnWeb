@@ -8,7 +8,7 @@ namespace AutoZdRoutes.WEB.Services
     {
         public void Handle(WebSocket current_socket, List<СonnectionModel> connectionsList, ActionWS action)
         {
-            var new_status_text = action.payload.ToString();
+            var new_status_text = action.payload.ToString().Substring(0,30);
             var currentConnection = connectionsList.FirstOrDefault(con => con.Socket == current_socket);
             //-----------------------------------
             var currentUser = connectionsList.FirstOrDefault(con => con.Socket == current_socket).User;
