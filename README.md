@@ -27,5 +27,5 @@ https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleVideo.mp4
 https://www.youtube.com/watch?v=F_tB7JsLFWQ&feature=youtu.be
 - * видео оказалось обрезаным по краям,из-за этого не видно имен пользователей сайта(не пользователей чата), а также не видно на какие ресурсы обычному пользователю доступ запрещен, а админу разрешен 
 - ** в конце видео показано все, что есть в БД
-9. ссылка на решение тестового задания(на аналитику) по mssql:
+9. Ссылка на решение тестового задания(на аналитику) по mssql:
 https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleSql.txt
