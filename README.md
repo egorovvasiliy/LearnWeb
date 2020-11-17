@@ -22,8 +22,13 @@ https://api.2gis.ru/doc/maps/ru/quickstart/
  - сборка : webpack
 7. Ссылка на видео-демонстрацию работы сайта.
 https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleVideo.mp4
-8. есть небольшой чатик WebSocket:
-см. первые 2 минуты видео.
+8. Видео:
+-чат на вебсокетах:
+https://www.youtube.com/watch?v=ha2BLEyWzp4&feature=youtu.be
+-вход,выход пользователей портала(ограничение доступа по ролям пользователей admin/user):
+https://www.youtube.com/watch?v=ajVelfvTHYQ&feature=youtu.be
+
+...скоро заменю это видео
 https://www.youtube.com/watch?v=F_tB7JsLFWQ&feature=youtu.be
 - * видео оказалось обрезаным по краям,из-за этого не видно имен пользователей сайта(не пользователей чата), а также не видно на какие ресурсы обычному пользователю доступ запрещен, а админу разрешен 
 - ** в конце видео показано все, что есть в БД
