@@ -30,8 +30,7 @@ https://www.youtube.com/watch?v=ajVelfvTHYQ&feature=youtu.be
 - Регистрация на портале с подтверждением по почте
 https://www.youtube.com/watch?v=Wseghea8PvM&feature=youtu.be
 -----------------------------------------------------------------------------------------------------------------------
-...скоро заменю это видео
-- * https://www.youtube.com/watch?v=F_tB7JsLFWQ&feature=youtu.be
-- ** в конце видео показано все, что есть в БД
+-адаптивность портала
+- https://www.youtube.com/watch?v=t5Rqi6yeH1s&feature=youtu.be
 9. Мое решение тестового задания(на аналитику) по mssql:
 https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleSql.txt
