@@ -31,5 +31,5 @@ https://www.youtube.com/watch?v=ajVelfvTHYQ&feature=youtu.be
 ...скоро заменю это видео
 - * https://www.youtube.com/watch?v=F_tB7JsLFWQ&feature=youtu.be
 - ** в конце видео показано все, что есть в БД
-9. Ссылка на решение тестового задания(на аналитику) по mssql:
+9. мое решение тестового задания(на аналитику) по mssql:
 https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleSql.txt
