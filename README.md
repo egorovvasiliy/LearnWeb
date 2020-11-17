@@ -21,14 +21,13 @@ https://api.2gis.ru/doc/maps/ru/quickstart/
  - typescript+React+Redux+scss(вшитые модулями в компоненты(почти всегда)) (начал использовать Saaga,хотя это несколько запутало проект), компоненты(контейнеры) как на классах, так и на хуках
  - сборка : webpack
 7. Видео:
--*-чат на вебсокетах:
+- * чат на вебсокетах:
 https://www.youtube.com/watch?v=ha2BLEyWzp4&feature=youtu.be
--*-вход,выход пользователей портала(ограничение доступа по ролям пользователей admin/user):
+- * вход,выход пользователей портала(ограничение доступа по ролям пользователей admin/user):
 https://www.youtube.com/watch?v=ajVelfvTHYQ&feature=youtu.be
 
 ...скоро заменю это видео
-https://www.youtube.com/watch?v=F_tB7JsLFWQ&feature=youtu.be
-- * видео оказалось обрезаным по краям,из-за этого не видно имен пользователей сайта(не пользователей чата), а также не видно на какие ресурсы обычному пользователю доступ запрещен, а админу разрешен 
+- * https://www.youtube.com/watch?v=F_tB7JsLFWQ&feature=youtu.be
 - ** в конце видео показано все, что есть в БД
 9. Ссылка на решение тестового задания(на аналитику) по mssql:
 https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleSql.txt
