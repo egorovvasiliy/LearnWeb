@@ -27,7 +27,7 @@ https://www.youtube.com/watch?v=ha2BLEyWzp4&feature=youtu.be
 - * вход,выход пользователей портала(ограничение доступа по ролям пользователей admin/user):
 - * в конце видео работа с bootstrap-menu, а также компонент выпадающих случайных сообщений(пример-CSS):
 https://www.youtube.com/watch?v=ajVelfvTHYQ&feature=youtu.be
-
+-----------------------------------------------------------------------------------------------------------------------
 ...скоро заменю это видео
 - * https://www.youtube.com/watch?v=F_tB7JsLFWQ&feature=youtu.be
 - ** в конце видео показано все, что есть в БД
