@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
@@ -16,6 +17,13 @@ namespace webPortal.Controllers
 {
     public class AccountController : LayoutController
     {
+        [NonAction]
+        string DecodeJWTToken(string _token,string _claimType) {
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadToken(_token) as JwtSecurityToken;
+            var result = token.Claims.First(claim => claim.Type == _claimType).Value;
+            return result;
+        }
         [HttpPost]
         public async Task<Response> Login([FromBody]LoginModel loginModel) {
             try
@@ -25,7 +33,7 @@ namespace webPortal.Controllers
                 if (response.Code==200) {
                     HttpContext.Response.Cookies.Append(AuthOptions.cookie_token, token);
                     HttpContext.Response.Cookies.Append(AuthOptions.cookie_username, loginModel.Email);
-                    //Роль определяется дополнительным запросом см.ValidateToken
+                    HttpContext.Response.Cookies.Append(AuthOptions.cookie_userrole, DecodeJWTToken(token, ClaimsIdentity.DefaultRoleClaimType));
                 }
                 return response;// Прокидываем токен в ответе дальше клиенту
             }
@@ -69,21 +77,12 @@ namespace webPortal.Controllers
             {
                 if (HttpContext.User.Identity.IsAuthenticated)
                 {
-                    SetCookieRole();
                     return new OkResult();
                 }
                 else return new StatusCodeResult(204); //#Solve: возможно,так делать не стоит, перехват таких статусов в MiddleWare может хорошенько запутать
             }
             catch {
                 return new StatusCodeResult(204);
-            }
-        }
-        [NonAction]
-        public void SetCookieRole()
-        {
-            var claimRole = HttpContext.User.Claims.Where(claim=>claim.Type== ClaimsIdentity.DefaultRoleClaimType).FirstOrDefault();
-            if (claimRole!=null) {
-                HttpContext.Response.Cookies.Append(AuthOptions.cookie_userrole, claimRole.Value);
             }
         }
         [HttpGet]
