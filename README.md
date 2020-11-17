@@ -20,12 +20,10 @@ https://api.2gis.ru/doc/maps/ru/quickstart/
 6. Frontend:
  - typescript+React+Redux+scss(вшитые модулями в компоненты(почти всегда)) (начал использовать Saaga,хотя это несколько запутало проект), компоненты(контейнеры) как на классах, так и на хуках
  - сборка : webpack
-7. Ссылка на видео-демонстрацию работы сайта.
-https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleVideo.mp4
-8. Видео:
--чат на вебсокетах:
+7. Видео:
+-*-чат на вебсокетах:
 https://www.youtube.com/watch?v=ha2BLEyWzp4&feature=youtu.be
--вход,выход пользователей портала(ограничение доступа по ролям пользователей admin/user):
+-*-вход,выход пользователей портала(ограничение доступа по ролям пользователей admin/user):
 https://www.youtube.com/watch?v=ajVelfvTHYQ&feature=youtu.be
 
 ...скоро заменю это видео
