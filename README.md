@@ -2,7 +2,7 @@
 -	Сбор информации с API Яндекс.Расписаний:
 https://yandex.ru/dev/rasp/doc/concepts/about-docpage/
 -	Хранение информации в БД msSql.
--	Отображение данных в на портале ASP.Net Core средствами API 2Gis.
+-	Отображение данных на портале ASP.Net Core средствами API 2Gis.
 https://api.2gis.ru/doc/maps/ru/quickstart/
 - В перспективе построение оптимального маршрута между двумя автобусными станциями
 
