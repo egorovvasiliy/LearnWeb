@@ -18,7 +18,7 @@ import { RootState } from '../redux/reducers/rootreducer';
 import { typeDispatch} from '../redux/types'
 //----------
 import { ChatWindow } from '../redux/components/websocketChat/chat/chatWindow'
-import { UserMenu } from '../redux/containers/user_menu/user_menu'
+import { HeadMenu } from '../redux/containers/headMenu/headMenu'
 import { Map2gis } from '../redux/containers/map2gis/map2gis'
 import { TableStations } from '../redux/containers/tables/tableStations'
 import { TableSchedule } from '../redux/containers/tables/tableSchedule'
@@ -27,7 +27,6 @@ import {setStations_ActCr } from '../redux/actions/mapsActions';
 import { didMountApp_ActTh } from '../redux/actions/globalActions'
 import { InitializeAppRun } from '../initialize';
 import { ResizeSplitTabStations, ResizeSplitTabSchedule } from '../crutch/forSplit';
-import { SendMessageWsChat_ActCr, UpdateStatusUserWsChat_ActCr } from '../redux/actions/wsChatActions';
 //#endregion Import
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
@@ -45,6 +44,7 @@ const mapStateToProps = (store: RootState) => {
         currentUserWsChat: store.wsChat.currentUser,
         usersWsChat: store.wsChat.users,
         messagesWsChat: store.wsChat.messages,
+        webSocket: store.wsChat.webSocket
     }
 };
 const mapDispatchToProps = (dispatch: typeDispatch) => {
@@ -83,11 +83,11 @@ class App extends React.Component<TPropsFromRedux, IState> {
         window.map2gis && window.map2gis.invalidateSize();// Необходимо при динамическом изменении - например добавлении таблицы, которая меняет размер карты
     };
     render() {
-        let divChat = this.props.visibleChat ? <ChatWindow visibleChat={this.props.visibleChat} currentUser={this.props.currentUserWsChat} isAuth={this.props.isAuthWsChat} users={this.props.usersWsChat} messages={this.props.messagesWsChat} /> : null;
+        let divChat = this.props.visibleChat ? <ChatWindow visibleChat={this.props.visibleChat} currentUser={this.props.currentUserWsChat} isAuth={this.props.isAuthWsChat} users={this.props.usersWsChat} messages={this.props.messagesWsChat} webSocket={this.props.webSocket} /> : null;
         return (
             <React.Fragment>
                 <header className={styleApp.WrapMenu}>
-                    <UserMenu />
+                    <HeadMenu />
                 </header>
                 <div className={styleApp.Content}>
                     <SplitPane split="horizontal" initialSizes={[2, 1]}

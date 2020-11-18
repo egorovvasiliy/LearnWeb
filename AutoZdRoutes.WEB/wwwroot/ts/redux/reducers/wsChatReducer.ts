@@ -1,9 +1,8 @@
 ﻿//-----------------
 import {
     IWsChatState, defaultName, WsChatAction, typeLogInWsChat, typeChangeVisibleWsChat, typeSetUsersWsChat,
-    typeConnectUserWsChat, typeRemoveUserWsChat, typeUpdateStatusUserWsChat, typeSendMessageWsChat,
-    typeSetMessagesWsChat,
-    typeSetCurrentUserWsChat
+    typeConnectUserWsChat, typeRemoveUserWsChat, typeUpdateStatusUserWsChat, typeSendMessageWsChat, typeSetWebSocket,
+    typeSetMessagesWsChat,typeSetCurrentUserWsChat
 } from '../types'
 //-----------------
 const initialState = (): IWsChatState => ({
@@ -11,7 +10,8 @@ const initialState = (): IWsChatState => ({
     currentUser: { Name: defaultName, Status: '', Id:'' },
     visibleChat: false,
     users: new Array<IUser>(),
-    messages: new Array<IMessage>()
+    messages: new Array<IMessage>(),
+    webSocket:null
 })
 export function wsChatReducer(state: IWsChatState = initialState(), action: WsChatAction): IWsChatState {
     switch (action.type) {
@@ -46,8 +46,10 @@ export function wsChatReducer(state: IWsChatState = initialState(), action: WsCh
             let new_messages = [...state.messages, action.messages];
             return { ...state, messages: new_messages }
         }
+        case typeSetWebSocket: {
+            return { ...state, webSocket: action.webSocket }
+        }
         default:
-
             return state;
     }
 }

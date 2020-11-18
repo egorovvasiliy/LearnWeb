@@ -11,6 +11,13 @@ $color-active-pan: #786a6a; // фон панелей
         border-left: unset;
     }
 }
+.WrapMenu {
+    //display определен динамически в компоненте
+    flex-flow: row;
+    width: 100%;
+    min-width: 300px;
+    overflow:auto; //Это позволит пересчитать правильный размер-width элемента
+}
 .wrapItem0 {
     @include wrapItem;
     margin: 10px 5px;
@@ -41,10 +48,15 @@ $color-active-pan: #786a6a; // фон панелей
     border: 1px solid $color-gray;
     background-color: $color-active-pan;
 }
-
+.OuterCenter{
+    display:flex;
+}
+.InnerCenter {
+    margin:auto;
+}
 .LeftMenu {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row;
 
     &[data-hide="true"] {
         opacity: 0.2

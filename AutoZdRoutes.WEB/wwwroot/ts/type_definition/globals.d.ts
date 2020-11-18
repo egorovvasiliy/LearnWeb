@@ -1,5 +1,4 @@
 ﻿declare interface Window {
-    wsService: any,
     dispatch: any,
     test:any,
     //connectionNotifyHub: signalR.HubConnection,

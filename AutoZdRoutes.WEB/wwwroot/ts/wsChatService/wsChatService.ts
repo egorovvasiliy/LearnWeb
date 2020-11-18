@@ -1,4 +1,4 @@
-﻿import { AppClient } from "./AppClient";
+﻿import { ActionsSocket } from "./ActionsSocket";
 export enum ActionsWSTypes {
     userConnect,
     userDisconnect,
@@ -11,69 +11,56 @@ export interface IActionWS {
     type: ActionsWSTypes,
     payload: any
 }
-export class WSChatService {
-    constructor(_appClient: AppClient) {
-        this.appClient = _appClient;
-        this.openWebSocket();
-    }
-
-    appClient: AppClient;
-    socket: WebSocket;
-    GetSocket = () => {
-        if (!this.socket)
-            this.socket = new WebSocket(this.appClient.urlWs);
-        return this.socket;
-    }
-    openWebSocket = () => {
-        this.socket = this.GetSocket();
-        this.socket.onopen = (e) => {
-            let body: IActionWS = {
-                type: ActionsWSTypes.userConnect,
-                payload: this.appClient.name
-            };
-            this.socket.send(JSON.stringify(body));
-        };
-        this.socket.onclose = e => {
-            this.appClient.onClose && this.appClient.onClose();
-        }
-        this.socket.onmessage = (e) => {
-            this.OnMessage(e);
-        }
-    }
-    OnMessage = (e: MessageEvent) => {
-        console.log('OnMessageSocket');
+/**Отправка информации о сокете на сервер, а также обработка сообщений сокета*/
+export const ChatSocketDecorator = (socket: WebSocket,userName:string, actionsSocket: ActionsSocket) => {
+    const OnMessage = (e: MessageEvent) => {
         let actionWs = (<IActionWS>JSON.parse(e.data));
-        console.log('actionWebSocket', actionWs);
+        //console.log('actionWebSocket', actionWs);
         if (actionWs) {
             switch (actionWs.type) {
                 case ActionsWSTypes.initCurrentUser: {
-                    this.appClient.initCurrentUser(actionWs.payload);
+                    actionsSocket.initCurrentUser(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.setActiveUsers: {
-                    this.appClient.setActiveUsers(actionWs.payload);
+                    actionsSocket.setActiveUsers(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.userConnect: {
-                    this.appClient.connectUser(actionWs.payload);
+                    actionsSocket.connectUser(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.userDisconnect: {
-                    this.appClient.removeUser(actionWs.payload);
+                    actionsSocket.removeUser(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.updateStatus: {
-                    this.appClient.updateStatusUser(actionWs.payload);
+                    actionsSocket.updateStatusUser(actionWs.payload);
                     break;
                 }
                 case ActionsWSTypes.message: {
-                    this.appClient.sendMessage(actionWs.payload);
+                    actionsSocket.sendMessage(actionWs.payload);
                     break;
                 }
                 default: {
                     break;
-                } 
+                }
             }
         }
     };
+    socket.onopen = (e) => {
+        //после установки соединения сразу направляем серверу необходимую информацию о себе
+        let body: IActionWS = {
+            type: ActionsWSTypes.userConnect,
+            payload: userName
+        };
+        socket.send(JSON.stringify(body));
+    };
+    socket.onclose = e => {
+        actionsSocket.onClose && actionsSocket.onClose();
+    }
+    socket.onmessage = (e) => {
+        OnMessage(e);
+    }
+    return socket;
 }

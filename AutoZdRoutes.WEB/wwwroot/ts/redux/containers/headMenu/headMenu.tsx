@@ -7,8 +7,6 @@ import SwipeableViews from 'react-swipeable-views';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -26,6 +24,7 @@ import { Register } from '../../components/register';
 import { urlWeb, urlWs } from "../../../constants"
 import { GenerateRandomCallFunc } from '../../../testNotify'
 import { LoginWSChat as LoginWebSocket } from '../../components/websocketChat/login/login'
+import {TabPanel } from './tabPanel'
 //--------------------------------------------
 import { RootState } from '../../reducers/rootreducer';
 import { adminRole, defaultName, ISettingsState} from '../../types';
@@ -34,57 +33,15 @@ import { changeColorAction } from '../../actions/settingsActions';
 import { changeVisibleMap_ActCr, changeVisibleStationsTab_ActCr, setTypeStation_ActCr, changeVisibleStaionsOnMap_ActCr } from '../../actions/mapsActions';
 //--------------------------------
 import * as styles from './style.scss';
-import { changeVisibleWsChat_ActCr, ConnectUserWsChat_ActCr, loginWsChat_ActCr, RemoveUserWsChat_ActCr, SendMessageWsChat_ActCr, SetCurrentUserWsChat_ActCr, SetMessagesWsChat_ActCr, SetUsersWsChat_ActCr, UpdateStatusUserWsChat_ActCr } from '../../actions/wsChatActions';
+import {
+    changeVisibleWsChat_ActCr, ConnectUserWsChat_ActCr, loginWsChat_ActCr, RemoveUserWsChat_ActCr, SendMessageWsChat_ActCr, SetCurrentUserWsChat_ActCr,
+    SetMessagesWsChat_ActCr, SetUsersWsChat_ActCr, UpdateStatusUserWsChat_ActCr, SetWebSocket_ActCr
+} from '../../actions/wsChatActions';
 const style = styles as ClassUserMenu;
-import { WSChatService } from '../../../wsChatService/wsChatService';
-import { AppClient } from '../../../wsChatService/AppClient';
+import { ChatSocketDecorator } from '../../../wsChatService/wsChatService';
+import { ActionsSocket } from '../../../wsChatService/ActionsSocket';
 //#endregion
 //---------------------------------------------
-//#region secondary
-const SaveSettingsAsync = async (jsonPayload: ISettingsState) => {
-    let response = await fetch(urlWeb + `/Settings/Save`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(jsonPayload)
-    }).catch((ex) => { "Не получилось" }) as Response;
-    if (!response.ok) {
-        window.SendNotification("Не получилось");
-    }
-}
-interface TabPanelProps {
-    children?: React.ReactNode;
-    dir?: string;
-    index: any;
-    value: any;
-}
-//--------Сторонний импорт----------------------
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <Typography
-            component="div"
-            role="tabpanel"
-            hidden={value !== index}
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box p={3}>{children}</Box>}
-        </Typography>
-    );
-}
-function a11yProps(index: any) {
-    return {
-        id: `full-width-tab-${index}`,
-        'aria-controls': `full-width-tabpanel-${index}`,
-    };
-}
-//----------------------------------------------
-//#endregion
-
 const mapStateToProps = (store: RootState) => {
     return {
         username: store.auth.username,
@@ -101,10 +58,9 @@ const mapStateToProps = (store: RootState) => {
         visibleWsChat: store.wsChat.visibleChat,
         currentUser: store.wsChat.currentUser,
         usersWsChat: store.wsChat.users,
-        messagesWsChat: store.wsChat.messages
+        messagesWsChat: store.wsChat.messages,
     }
 };
-
 const mapDispatchToProps = (dispatch) => {
     return {
         changeColorMenu: (color: string) => { dispatch(changeColorAction(color)) },
@@ -157,10 +113,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         SendMessageWsChat: (message: IMessage) => {
             dispatch(SendMessageWsChat_ActCr(message))
+        },
+        setWebSocket: (ws: WebSocket) => {
+            dispatch(SetWebSocket_ActCr(ws))
         }
     }
 }
-const connector = connect(mapStateToProps, mapDispatchToProps);
 type TPropsFromRedux = ConnectedProps<typeof connector>;
 //----------------------------------------------
 type TState ={
@@ -169,7 +127,7 @@ type TState ={
 type PropsType = TPropsFromRedux & {
 };
 //-------------------------------------------------------------------------------------------------
-class _UserMenu extends React.Component<PropsType, TState> {
+class _HeadMenu extends React.Component<PropsType, TState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -177,6 +135,10 @@ class _UserMenu extends React.Component<PropsType, TState> {
         };
         window.changeIndexTab = this.handleChangeIndex;
     }
+    tabProps = (index: any) => ({
+        id: `full-width-tab-${index}`,
+        'aria-controls': `full-width-tabpanel-${index}`,
+    });
     //-----------------------
     inputNotifyTest: HTMLInputElement;
     //-----------------------------------------------------------------------------------------------
@@ -195,42 +157,50 @@ class _UserMenu extends React.Component<PropsType, TState> {
         let typeId = e.target.value as number;//можно использовать ref-ы
         this.props.SetTypeStation(typeId);
     }
-    wsService: WSChatService;
-    buildAppClientForWSChatServise = (_name:string) => {
-        let appClient = new AppClient();
-        appClient.name = _name;
-        appClient.urlWs = urlWs;
-        appClient.onClose = this.props.logoutWsChat;
-        appClient.initCurrentUser = this.props.SetCurrentUserWsChat;
-        appClient.setActiveUsers = this.props.SetUsersWsChat;
-        appClient.connectUser = _user => {
+    socket: WebSocket;
+    actionsSocket: ActionsSocket = {
+        onClose: this.props.logoutWsChat,
+        initCurrentUser: this.props.SetCurrentUserWsChat,
+        setActiveUsers: this.props.SetUsersWsChat,
+        connectUser: _user => {
             this.props.ConnectUserWsChat(_user);
-        };
-        appClient.removeUser = _user => {
+        },
+        removeUser: _user => {
             this.props.RemoveUserWsChat(_user.Id);
-        };
-        appClient.updateStatusUser = _status => {
+        },
+        updateStatusUser: _status => {
             let curUs = this.props.currentUser;
             if (curUs.Id == _status.IdUser)
                 this.props.SetCurrentUserWsChat({ ...curUs, Status: _status.Text });
             let newUsers = this.props.usersWsChat.map(u => u.Id != _status.IdUser ? u : { ...u, Status: _status.Text });
             this.props.SetUsersWsChat(newUsers);
-        };
-        appClient.sendMessage = (_mes) => {
+        },
+        sendMessage: (_mes) => {
             this.props.SendMessageWsChat(_mes);
-        };
-        return appClient;
+        }
     }
     loginWSChat = (_name: string) => {
-        this.wsService = new WSChatService(this.buildAppClientForWSChatServise(_name));
-        window.wsService = this.wsService;//#Solve: лучше занести в Store
+        this.socket = new WebSocket(urlWs);
+        this.socket = ChatSocketDecorator(this.socket, _name, this.actionsSocket);
+        this.props.setWebSocket(this.socket);//Отправим сокет в Store
         this.props.loginWsChat({ Name: defaultName, Id:"", Status:"" });
     }
     logoutWSChat = () => {
-        this.wsService.socket.close();
-        this.props.logoutWsChat();
+        this.socket.close();
         this.props.SetUsersWsChat(new Array<IUser>());
         this.props.SetMessagesWsChat(new Array<IMessage>())
+    }
+    SaveSettingsAsync = async (jsonPayload: ISettingsState) => {
+        let response = await fetch(urlWeb + `/Settings/Save`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonPayload)
+        }).catch((ex) => { "Не получилось" }) as Response;
+        if (!response.ok) {
+            window.SendNotification("Не получилось");
+        }
     }
 //-----------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------
@@ -244,19 +214,19 @@ class _UserMenu extends React.Component<PropsType, TState> {
                         variant="fullWidth"
                         aria-label="full width tabs example"
                     >
-                        <Tab label="Карта" {...a11yProps(0)} />
-                        <Tab label="Настройки" {...a11yProps(1)} />
-                        <Tab label="WebSocketChat" {...a11yProps(2)} />
-                        <Tab label="Empty2" {...a11yProps(3)} />
+                        <Tab label="Карта" {...this.tabProps(0)} />
+                        <Tab label="Настройки" {...this.tabProps(1)} />
+                        <Tab label="WebSocketChat" {...this.tabProps(2)} />
+                        <Tab label="Empty" {...this.tabProps(3)} />
                         {this.props.userrole != adminRole ?
-                            <Tab label="StopUser" {...a11yProps(4)} />
+                            <Tab label="StopUser" {...this.tabProps(4)} />
                             :
-                            <Tab label="Админка" {...a11yProps(4)} />
+                            <Tab label="Админка" {...this.tabProps(4)} />
                         }
-                        <Tab title="login" icon={<InputIcon />} {...a11yProps(6)} style={{ marginLeft: 'auto', minWidth: 'unset' }} />
+                        <Tab title="login" icon={<InputIcon />} {...this.tabProps(6)} style={{ marginLeft: 'auto', minWidth: 'unset' }} />
                         {this.props.isAuth ?
                             <Tab style={{ display: "none" }}></Tab> :
-                            <Tab title="Register" icon={<PersonAdd />} {...a11yProps(7)} style={{ minWidth: 'unset', margin: 'auto 30px' }} />
+                            <Tab title="Register" icon={<PersonAdd />} {...this.tabProps(7)} style={{ minWidth: 'unset', margin: 'auto 30px' }} />
                         }
                         <Label_Login username={this.props.username} />
                     </Tabs>
@@ -265,7 +235,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
                     index={this.state.valueTab}
                     onChangeIndex={this.handleChangeIndex}
                 >
-                    {/*Карта-------------------------------------------------------------------------*/}
+                    {/*Карта*/}
                     <TabPanel value={this.state.valueTab} index={0}>
                         <Menu name="Карта">
                             <Menu name="Объекты" img="objects">
@@ -310,7 +280,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
                             <RadioButtonBinary nameFalse={"Скрыть"} nameTrue="Показать" value={this.props.visibleMap} change={() => { this.props.changeVisibleMap() }} />
                         </Menu>
                     </TabPanel>
-                    {/*Настройки----------------------------------------------------------------------*/}
+                    {/*Настройки*/}
                     <TabPanel value={this.state.valueTab} index={1}>
                         <Menu name="Настройки">
                             <Menu name="Меню" img="settings">
@@ -358,13 +328,13 @@ class _UserMenu extends React.Component<PropsType, TState> {
                                 </Menu>
                             </Menu>
                             <Menu name="Сохранить" img="save" click={async () => {
-                                await SaveSettingsAsync(this.props.settings);
+                                await this.SaveSettingsAsync(this.props.settings);
                             }} />
                             <Menu name="По умолчанию" img="default" click={async () => {
-                                await SaveSettingsAsync(this.props.settings);
+                                await this.SaveSettingsAsync(this.props.settings);
                             }} />
                             <Menu name="Личные" img="users_settings" click={async () => {
-                                await SaveSettingsAsync(this.props.settings);
+                                await this.SaveSettingsAsync(this.props.settings);
 
                             }} />
                         </Menu>
@@ -380,7 +350,7 @@ class _UserMenu extends React.Component<PropsType, TState> {
                     <TabPanel value={this.state.valueTab} index={3}>
                     </TabPanel>
 
-                    {/*Админка-------------------------------------------------------------------------*/}
+                    {/*Админка*/}
                     {this.props.userrole != adminRole ?
                         <TabPanel value={this.state.valueTab} index={4}>
                             <Menu name="StopUser">
@@ -408,11 +378,11 @@ class _UserMenu extends React.Component<PropsType, TState> {
                             </Menu>
                         </TabPanel>
                     }
-                    {/*Auth----------------------------------------------------------------------------*/}
+                    {/*Auth*/}
                     <TabPanel value={this.state.valueTab} index={5}>
                         <Login isAuth={this.props.isAuth} LoginClickAsync={this.props.runLogin} LogOutClickAsync={this.props.runLogOut} />
                     </TabPanel>
-                    {/*Register-------------------------------------------------------------------------*/}
+                    {/*Register*/}
                     {!this.props.isAuth ?
                         <TabPanel value={this.state.valueTab} index={6}>
                             <Register isAuth={this.props.isAuth} RegisterClick={this.props.runRegister} LogOutClickAsync={this.props.runLogOut} />
@@ -424,5 +394,6 @@ class _UserMenu extends React.Component<PropsType, TState> {
         );
     }
 }
-const UserMenu = connector(_UserMenu);
-export { UserMenu }
+const connector = connect(mapStateToProps, mapDispatchToProps);
+const HeadMenu = connector(_HeadMenu);
+export { HeadMenu }

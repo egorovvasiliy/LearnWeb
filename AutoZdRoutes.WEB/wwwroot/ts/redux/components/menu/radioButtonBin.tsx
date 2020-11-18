@@ -32,9 +32,15 @@ export default class RadioButtonBinary extends React.Component<IProps, IState> {
     render() {
         return (
             <form style={{ mixBlendMode: "luminosity" }} className={this.props.className}>
-                <input name="RadioButton" type="radio" defaultChecked={!this.state.value} onChange={this.props.change} />{this.state.nameFalse}
-                <br />
-                <input name="RadioButton" type="radio" defaultChecked={this.state.value} onChange={this.props.change} />{this.state.nameTrue}
+                <div style={{ display: 'inline', whiteSpace: 'nowrap' }}>
+                    <input name="RadioButton" type="radio" defaultChecked={!this.state.value} onChange={this.props.change} />
+                    <label>{this.state.nameFalse}</label>
+                </div>
+                <br/>
+                <div style={{ display: 'inline', whiteSpace: 'nowrap' }}>
+                    <input name="RadioButton" type="radio" defaultChecked={this.state.value} onChange={this.props.change} />
+                    <label>{this.state.nameTrue}</label>
+                </div>
             </form>
         )
     }

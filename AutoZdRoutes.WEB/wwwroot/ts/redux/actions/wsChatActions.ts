@@ -1,4 +1,4 @@
-﻿import { typeLogInWsChat, typeChangeVisibleWsChat, typeSetUsersWsChat, typeSetMessagesWsChat, typeConnectUserWsChat, typeRemoveUserWsChat, typeUpdateStatusUserWsChat, typeSendMessageWsChat, WsChatAction, typeSetCurrentUserWsChat } from '../types'
+﻿import { typeLogInWsChat, typeChangeVisibleWsChat, typeSetUsersWsChat, typeSetMessagesWsChat, typeConnectUserWsChat, typeRemoveUserWsChat, typeUpdateStatusUserWsChat, typeSendMessageWsChat, WsChatAction, typeSetCurrentUserWsChat, typeSetWebSocket } from '../types'
 //----------ActionsCreators----------------------------------------------
 export const loginWsChat_ActCr = (_isIn:boolean, _user?: IUser): WsChatAction => {
     return {
@@ -53,5 +53,11 @@ export const SendMessageWsChat_ActCr = (mes: IMessage): WsChatAction => {
     return {
         type: typeSendMessageWsChat,
         messages: mes
+    }
+}
+export const SetWebSocket_ActCr = (val: WebSocket): WsChatAction => {
+    return {
+        type: typeSetWebSocket,
+        webSocket: val
     }
 }

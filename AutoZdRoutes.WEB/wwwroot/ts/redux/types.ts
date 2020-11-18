@@ -32,12 +32,14 @@ export const typeConnectUserWsChat = "typeConnectUserWsChat" as const;
 export const typeRemoveUserWsChat = "typeRemoveUserWsChat" as const;
 export const typeUpdateStatusUserWsChat = "typeUpdateStatusUserWsChat" as const;
 export const typeSendMessageWsChat = "typeSendMessageWsChat" as const;
+export const typeSetWebSocket = "typeSetWebSocket" as const;
 export interface IWsChatState {
     isAuth: boolean,
     currentUser: IUser,
     visibleChat: boolean,
     users: Array<IUser>,
-    messages: Array<IMessage>
+    messages: Array<IMessage>,
+    webSocket: WebSocket
 }
 interface ILoginWsChatAction {
     type: typeof typeLogInWsChat,
@@ -76,9 +78,13 @@ interface ISendMessageWsChat {
     type: typeof typeSendMessageWsChat,
     messages: IMessage
 }
+interface ISetWebsocket {
+    type: typeof typeSetWebSocket,
+    webSocket: WebSocket
+}
 export type WsChatAction = ILoginWsChatAction | IChangeVisibleWsChatAction | IConnectUserWsChat
     | IRemoveUserWsChat | IUpdateStatusUserWsChat | ISendMessageWsChat | ISetUsersWsChat
-    | ISetMessagesWsChat | ISetCurrentUserWsChat;
+    | ISetMessagesWsChat | ISetCurrentUserWsChat | ISetWebsocket;
 //#endregion Auth
 //---------------------------------------------------
 //#region Maps

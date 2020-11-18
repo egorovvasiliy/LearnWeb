@@ -100,12 +100,6 @@ $foot: 45px; // для футера
     overflow-y: auto;
     padding-bottom: $foot;
 }
-.WrapMenu {
-    //display определен динамически в компоненте
-    flex-flow: row wrap;
-    width: 100%;
-    min-width: 300px;
-}
 .WrapMap {
     border-color: black;
     border-bottom: solid;

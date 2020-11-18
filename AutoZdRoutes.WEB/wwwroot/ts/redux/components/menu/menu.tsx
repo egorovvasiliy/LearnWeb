@@ -1,7 +1,7 @@
 ﻿import * as React from "react"
 import * as ReactDOM from "react-dom"
-import * as style from "./style.scss"
-const styleMenu = style as ClassMenu;
+import * as styles from "./style.scss"
+const style = styles as ClassMenu;
 import Item from "./item"
 /*
 Этот компонент представляет собой элемент многоуровневого меню (дерева).
@@ -25,7 +25,8 @@ interface IProps {
 interface IState {
     leftMenuState: StateEnum, 
     select_id: number, // Идентификатор выбранного элемента Children
-    parentMenu?: Menu
+    parentMenu?: Menu,
+    flexWrap: boolean
 }
 enum StateEnum { //см. div.LeftMenu
     Empty,
@@ -33,7 +34,17 @@ enum StateEnum { //см. div.LeftMenu
     Hide
 }  
 interface ClassMenu {
-    WrapMenu, wrapItem0, wrapItem1, wrapItem2, closerMenu, CurrentMenu, LeftMenu, RightMenu, ShowBorderRightMenu, itemImage0, itemImage1, CenterContent: string
+    WrapMenu,
+    wrapItem0, wrapItem1, wrapItem2,
+    closerMenu,
+    CurrentMenu,
+    OuterCenter,
+    InnerCenter,
+    LeftMenu,
+    RightMenu,
+    ShowBorderRightMenu,
+    itemImage0, itemImage1,
+    CenterContent: string
 }
 //***************************************************************************************************************
 export default class Menu extends React.Component<IProps, IState> {
@@ -41,18 +52,19 @@ export default class Menu extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             select_id: undefined,
-            leftMenuState: StateEnum.Empty
+            leftMenuState: StateEnum.Empty,
+            flexWrap:false
         }
     }
     childsMenu: Array<Menu>;
-    setStateLeftMenuFromChild = (_param:StateEnum) => { 
+    setStateLeftMenuFromChild = (_val:StateEnum) => { 
         this.setState({
-            leftMenuState: _param
+            leftMenuState: _val
         });
     }
-    setStateLeftMenu = (_param: StateEnum,_id: number = undefined) => {
+    setStateLeftMenu = (_val: StateEnum,_id: number = undefined) => {
         this.setState({
-            leftMenuState: _param,
+            leftMenuState: _val,
             select_id: _id
         });
     }
@@ -85,28 +97,47 @@ export default class Menu extends React.Component<IProps, IState> {
             subMenu.close(isClosedHead);
         })
     }
+    menuHtmlElement: HTMLDivElement;
+    flexWrap: boolean;
+    componentDidMount = () => {
+        window.addEventListener('resize', e => {
+            if (this.menuHtmlElement) {
+                let isWrap = this.menuHtmlElement.clientWidth > (e.currentTarget as Window).innerWidth - 30;
+                console.log(this.props.name, this.state.parentMenu, this.menuHtmlElement.clientWidth);
+                if (this.state.parentMenu) {
+                    this.flexWrap = this.state.parentMenu.flexWrap && isWrap;
+                    console.log(this.props.name, this.state.parentMenu.flexWrap, this.menuHtmlElement.clientWidth);
+                }
+                else 
+                    this.flexWrap = isWrap;
+                this.setState(state => ({
+                    flexWrap: this.flexWrap
+                }))
+            }
+        });
+    }
 //***************************************************************************************************************
     render() {
         let classLeftMenu, classRightMenu: string;
         //---------------------------------------------------------------------------------------------------------------
         switch (this.state.leftMenuState) {
             case StateEnum.Empty: {
-                classLeftMenu = styleMenu.LeftMenu;
-                classRightMenu = styleMenu.RightMenu;
+                classLeftMenu = style.LeftMenu;
+                classRightMenu = style.RightMenu;
                 break;
             }
             case StateEnum.Active: {
-                classLeftMenu = styleMenu.LeftMenu + " "+ styleMenu.CurrentMenu;
-                classRightMenu = styleMenu.RightMenu + " " + styleMenu.ShowBorderRightMenu;
+                classLeftMenu = style.LeftMenu + " " + style.CurrentMenu;
+                classRightMenu = style.RightMenu + " " + style.ShowBorderRightMenu;
                 break;
             }
             case StateEnum.Hide: {
-                classLeftMenu = styleMenu.LeftMenu;
-                classRightMenu = styleMenu.RightMenu+" " + styleMenu.ShowBorderRightMenu;
+                classLeftMenu = style.LeftMenu;
+                classRightMenu = style.RightMenu + " " + style.ShowBorderRightMenu;
                 break;
             }
         }
-//---------------------------------------------------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------------------------------
         let grandChilds = [];
         let indMenuWithChilds = 0;
         let childs = React.Children.map(this.props.children, (child: any, i) => {
@@ -133,17 +164,19 @@ export default class Menu extends React.Component<IProps, IState> {
                 return <Item id={_id} selectIdFromParent={_selectIdFromParent} name={(child as Menu).props.name} img={(child as Menu).props.img} click={clickFunc} />
             }
             else
-                return <div style={{ maxWidth: "none" }} className={styleMenu.CenterContent + " " + styleMenu.wrapItem0}>{child}</div>
+                return <div style={{ maxWidth: "none" }} className={style.CenterContent + " " + style.wrapItem0}>{child}</div>
         });
-//---------------------------------------------------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------------------------------
         this.childsMenu = new Array<Menu>();
         let resultTreeMenu = (
-            <div className={styleMenu.WrapMenu} style={{ display: this.props.click_id === this.props.id ? "flex" : "none" }}>
-                <div className={classLeftMenu} data-hide={this.state.leftMenuState == StateEnum.Hide}>
-                    {childs}
-                    {this.state.select_id>-1 ?
-                        <div className={styleMenu.closerMenu} onClick={e => { this.close() }}>x</div> : null
-                    }
+            <div ref={el => { this.menuHtmlElement = el }} className={style.WrapMenu} style={{ display: this.props.click_id === this.props.id ? "flex" : "none", flexWrap: this.state.flexWrap ? "wrap" : "nowrap" }}>
+                <div className={style.OuterCenter}>
+                    <div className={classLeftMenu + " " + style.InnerCenter} data-hide={this.state.leftMenuState == StateEnum.Hide}>
+                        {childs}
+                        {this.state.select_id > -1 ?
+                            <div className={style.closerMenu} onClick={e => { this.close() }}>x</div> : null
+                        }
+                    </div>
                 </div>
                 <div className={classRightMenu}>
                     {grandChilds.map((child, i) => (<Menu key={i} id={i} click_id={this.state.select_id} parentMenu={this} ref={el => { el && this.childsMenu.push(el)}}>{child}</Menu>))}
@@ -151,7 +184,7 @@ export default class Menu extends React.Component<IProps, IState> {
             </div>
         );
         let resultSimpleMenu = (
-            <div className={styleMenu.WrapMenu} style={{ display: this.props.click_id === this.props.id ? "flex" : "none" }}>
+            <div className={style.WrapMenu} style={{ display: this.props.click_id === this.props.id ? "flex" : "none" }}>
                 {childs}
             </div>
         );

@@ -2,26 +2,26 @@
 import * as styles from './style.scss';
 const style = styles as ClassChatWindow;
 import { defaultName, IWsChatState } from '../../../types'
-import { WSChatService, ActionsWSTypes, IActionWS } from '../../../../wsChatService/wsChatService';
+import { ActionsWSTypes, IActionWS } from '../../../../wsChatService/wsChatService';
 import { GetCurrentTimeDateToString } from '../../../../date';
 interface IProps {
+    webSocket:WebSocket
 }
 const ChatWindow = (props: IProps & IWsChatState) => {
-    let { isAuth, currentUser, users, messages } = props;
-    const wsService = window.wsService as WSChatService;//#Solve: позже сокет запишу в store, вынесу его из компонента и буду работать с ним через props
+    let { isAuth, currentUser, users, messages, webSocket } = props;
     const updateStatus = (_text: string) => {
         let body: IActionWS = {
             type: ActionsWSTypes.updateStatus,
             payload: _text
         }
-        wsService.socket.send(JSON.stringify(body));//#Solve: позже сокет запишу в store, вынесу его из компонента и буду работать с ним через props
+        webSocket.send(JSON.stringify(body));
     };
     const sendMessage = (_text: string) => {
         let body: IActionWS = {
             type: ActionsWSTypes.message,
             payload: _text
         }
-        wsService.socket.send(JSON.stringify(body));//#Solve: позже сокет запишу в store, вынесу его из компонента и буду работать с ним через props
+        webSocket.send(JSON.stringify(body));
     };
     return isAuth ?
         <div className={style.Login}>
