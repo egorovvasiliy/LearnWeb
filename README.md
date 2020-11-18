@@ -37,4 +37,7 @@ https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleSql.txt
 # 9.	Реализуемые в проекте паттерны:
 - Стратегия: https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.WEB/Services/ChatWS/ChatService.cs
 - Декоратор сокета: https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.WEB/wwwroot/ts/wsChatService/wsChatService.ts
-- Цепочка обязанностей: middleware в классе Startup
+- Цепочка обязанностей: middleware в классе Startup.
+- Композит: 
+https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.WEB/wwwroot/ts/redux/components/menu/menu.tsx
+https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.BLL/Model/ParsingApi/Stations/Locality.cs
