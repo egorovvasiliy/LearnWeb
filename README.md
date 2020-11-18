@@ -34,3 +34,7 @@ https://www.youtube.com/watch?v=Wseghea8PvM&feature=youtu.be
 https://www.youtube.com/watch?v=t5Rqi6yeH1s&feature=youtu.be
 # 8.	Мое решение тестового задания(на аналитику) по mssql:
 https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleSql.txt
+# 9.	Реализуемые в проекте паттерны:
+- Стратегия: https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.WEB/Services/ChatWS/ChatService.cs
+- Декоратор сокета: https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.WEB/wwwroot/ts/wsChatService/wsChatService.ts
+- Цепочка обязанностей: middleware в классе Startup
