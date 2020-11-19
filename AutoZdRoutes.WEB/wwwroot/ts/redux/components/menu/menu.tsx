@@ -21,13 +21,12 @@ interface IProps {
     onClick?: Function, // Наличие в props "onСlick" определяет в коде, что у этого элемента меню не должно быть потомков, и оно действует как кнопка
     parentMenu?: Menu, // Заполняется автоматически через React.Children.map
     selectId?: number  // Идентификатор выбранного элемента Children - носит внутренний характер
+    level?:number
 }
 interface IState {
     leftMenuState: StateEnum, // Управляет видом родительского компонента при выборе дочернего
     selectId: number,
     parentMenu?: Menu,
-    flexWrap: boolean, // При изменении ширины экрана браузера, flexwWrap отрабатывает сначала у вложенных элементов, а надо наоборот
-    height:number //доп.условие: дочернему компоненту будет разрешено установить св-во flexWrap:wrap,если ширина дочернего растянута на весь экран,т.е. родитель его самого уже "сбросил"(отврапил)
 }
 enum StateEnum {
     Empty,
@@ -54,10 +53,9 @@ export default class Menu extends React.Component<IProps, IState> {
         this.state = {
             selectId: undefined,
             leftMenuState: StateEnum.Empty,
-            flexWrap: true,
-            height:210
         }
     }
+    level = this.props.level ?? 0;
     childsMenu: Array<Menu>;
     setLeftStateMenuFromChild = (_val:StateEnum) => { 
         this.setState({
@@ -95,27 +93,6 @@ export default class Menu extends React.Component<IProps, IState> {
     }
     menuHtmlElement: HTMLDivElement;
     flexWrap: boolean;
-    componentDidMount = () => {
-        //window.addEventListener('resize', e => { // При изменении ширины экрана браузера, flexwWrap отрабатывает сначала у вложенных элементов, а надо наоборот
-        //    if (this.menuHtmlElement) {
-        //        //console.log(this.props.name, this.menuHtmlElement.clientWidth, (e.currentTarget as Window).innerWidth);
-        //        //let shouldWrap = this.menuHtmlElement.clientWidth > (e.currentTarget as Window).innerWidth-10;
-        //        //let shouldWrap = true;
-        //        //if (this.props.parentMenu) {
-        //        //    if (this.props.parentMenu.menuHtmlElement.clientHeight > 210) {
-        //        //        shouldWrap = false;
-        //        //    }
-        //        //}
-        //        //else 
-        //        //    shouldWrap=true;
-        //        //this.setState(state => ({
-        //        //    flexWrap: shouldWrap,
-        //        //    height: this.menuHtmlElement.clientHeight
-        //        //}))
-        //        //console.log(this.props.name, this.menuHtmlElement.clientHeight);
-        //    }
-        //});
-    }
 //***************************************************************************************************************
     render() {
         let classLeftMenu, classRightMenu: string;
@@ -169,7 +146,7 @@ export default class Menu extends React.Component<IProps, IState> {
         //---------------------------------------------------------------------------------------------------------------
         this.childsMenu = new Array<Menu>();
         let resultTreeMenu = (
-            <div ref={el => { this.menuHtmlElement = el }} className={style.WrapMenu} style={{ display: this.props.selectId === this.props.id ? "flex" : "none", flexWrap: this.state.flexWrap ? "wrap" : "nowrap" }}>
+            <div ref={el => { this.menuHtmlElement = el }} className={style.WrapMenu} style={{ display: this.props.selectId === this.props.id ? "flex" : "none", flexWrap: this.level > 0 ? "nowrap" : "wrap" }}>
                 <div className={style.OuterCenter}>
                     <div className={classLeftMenu + " " + style.InnerCenter} data-hide={this.state.leftMenuState == StateEnum.Hide}>
                         {childs}
@@ -179,7 +156,7 @@ export default class Menu extends React.Component<IProps, IState> {
                     </div>
                 </div>
                 <div className={classRightMenu}>
-                    {grandChilds.map((menu, i) => (<Menu name={menu.name} key={i} id={i} selectId={this.state.selectId} parentMenu={this} ref={el => { el && this.childsMenu.push(el)}}>{menu.childs}</Menu>))}
+                    {grandChilds.map((menu, i) => (<Menu name={menu.name} key={i} id={i} selectId={this.state.selectId} parentMenu={this} ref={el => { el && this.childsMenu.push(el) }} level={this.level+1}>{menu.childs}</Menu>))}
                 </div>
             </div>
         );
