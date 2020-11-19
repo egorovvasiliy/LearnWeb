@@ -2,7 +2,7 @@
 -	Сбор информации с API Яндекс.Расписаний:
 https://yandex.ru/dev/rasp/doc/concepts/about-docpage/
 -	Хранение информации в БД msSql.
--	Отображение данных в на портале ASP.Net Core средствами API 2Gis.
+-	Отображение данных на портале ASP.Net Core средствами API 2Gis.
 https://api.2gis.ru/doc/maps/ru/quickstart/
 - В перспективе построение оптимального маршрута между двумя автобусными станциями
 
@@ -34,3 +34,10 @@ https://www.youtube.com/watch?v=Wseghea8PvM&feature=youtu.be
 https://www.youtube.com/watch?v=t5Rqi6yeH1s&feature=youtu.be
 # 8.	Мое решение тестового задания(на аналитику) по mssql:
 https://github.com/egorovvasiliy/LearnWeb/blob/main/SampleSql.txt
+# 9.	Реализуемые в проекте паттерны:
+- Стратегия: https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.WEB/Services/ChatWS/ChatService.cs
+- Декоратор сокета: https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.WEB/wwwroot/ts/wsChatService/wsChatService.ts
+- Цепочка обязанностей: middleware в классе Startup.
+- Композит: 
+https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.WEB/wwwroot/ts/redux/components/menu/menu.tsx
+https://github.com/egorovvasiliy/LearnWeb/blob/main/AutoZdRoutes.BLL/Model/ParsingApi/Stations/Locality.cs
