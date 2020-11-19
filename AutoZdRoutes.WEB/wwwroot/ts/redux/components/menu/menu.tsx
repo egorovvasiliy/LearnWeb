@@ -26,7 +26,8 @@ interface IState {
     leftMenuState: StateEnum, // Управляет видом родительского компонента при выборе дочернего
     selectId: number,
     parentMenu?: Menu,
-    flexWrap: boolean // При изменении ширины экрана браузера, flexwWrap отрабатывает сначала у вложенных элементов, а надо наоборот
+    flexWrap: boolean, // При изменении ширины экрана браузера, flexwWrap отрабатывает сначала у вложенных элементов, а надо наоборот
+    height:number //доп.условие: дочернему компоненту будет разрешено установить св-во flexWrap:wrap,если ширина дочернего растянута на весь экран,т.е. родитель его самого уже "сбросил"(отврапил)
 }
 enum StateEnum {
     Empty,
@@ -53,7 +54,8 @@ export default class Menu extends React.Component<IProps, IState> {
         this.state = {
             selectId: undefined,
             leftMenuState: StateEnum.Empty,
-            flexWrap:false
+            flexWrap: true,
+            height:210
         }
     }
     childsMenu: Array<Menu>;
@@ -96,17 +98,21 @@ export default class Menu extends React.Component<IProps, IState> {
     componentDidMount = () => {
         window.addEventListener('resize', e => { // При изменении ширины экрана браузера, flexwWrap отрабатывает сначала у вложенных элементов, а надо наоборот
             if (this.menuHtmlElement) {
-                let isWrap = this.menuHtmlElement.clientWidth > (e.currentTarget as Window).innerWidth - 30;
-                console.log(this.props.name, this.state.parentMenu, this.menuHtmlElement.clientWidth);
-                if (this.state.parentMenu) {
-                    this.flexWrap = this.state.parentMenu.flexWrap && isWrap;
-                    console.log(this.props.name, this.state.parentMenu.flexWrap, this.menuHtmlElement.clientWidth);
-                }
-                else 
-                    this.flexWrap = isWrap;
-                this.setState(state => ({
-                    flexWrap: this.flexWrap
-                }))
+                //console.log(this.props.name, this.menuHtmlElement.clientWidth, (e.currentTarget as Window).innerWidth);
+                //let shouldWrap = this.menuHtmlElement.clientWidth > (e.currentTarget as Window).innerWidth-10;
+                //let shouldWrap = true;
+                //if (this.props.parentMenu) {
+                //    if (this.props.parentMenu.menuHtmlElement.clientHeight > 210) {
+                //        shouldWrap = false;
+                //    }
+                //}
+                //else 
+                //    shouldWrap=true;
+                //this.setState(state => ({
+                //    flexWrap: shouldWrap,
+                //    height: this.menuHtmlElement.clientHeight
+                //}))
+                //console.log(this.props.name, this.menuHtmlElement.clientHeight);
             }
         });
     }
@@ -149,7 +155,7 @@ export default class Menu extends React.Component<IProps, IState> {
                 {
                     _id = indMenuWithChilds++;
                     _selectIdFromParent = this.state.selectId;
-                    grandChilds.push(child.props.children);
+                    grandChilds.push({ name: (child as Menu).props.name, childs: child.props.children });
                 }
                 else {
                     _id = -1; //Здесь важно, чтобы эти id были не равны,т.к. они сравниваются в Item-компоненте
@@ -173,7 +179,7 @@ export default class Menu extends React.Component<IProps, IState> {
                     </div>
                 </div>
                 <div className={classRightMenu}>
-                    {grandChilds.map((child, i) => (<Menu key={i} id={i} selectId={this.state.selectId} parentMenu={this} ref={el => { el && this.childsMenu.push(el)}}>{child}</Menu>))}
+                    {grandChilds.map((menu, i) => (<Menu name={menu.name} key={i} id={i} selectId={this.state.selectId} parentMenu={this} ref={el => { el && this.childsMenu.push(el)}}>{menu.childs}</Menu>))}
                 </div>
             </div>
         );
