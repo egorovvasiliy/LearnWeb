@@ -96,25 +96,25 @@ export default class Menu extends React.Component<IProps, IState> {
     menuHtmlElement: HTMLDivElement;
     flexWrap: boolean;
     componentDidMount = () => {
-        window.addEventListener('resize', e => { // При изменении ширины экрана браузера, flexwWrap отрабатывает сначала у вложенных элементов, а надо наоборот
-            if (this.menuHtmlElement) {
-                //console.log(this.props.name, this.menuHtmlElement.clientWidth, (e.currentTarget as Window).innerWidth);
-                //let shouldWrap = this.menuHtmlElement.clientWidth > (e.currentTarget as Window).innerWidth-10;
-                //let shouldWrap = true;
-                //if (this.props.parentMenu) {
-                //    if (this.props.parentMenu.menuHtmlElement.clientHeight > 210) {
-                //        shouldWrap = false;
-                //    }
-                //}
-                //else 
-                //    shouldWrap=true;
-                //this.setState(state => ({
-                //    flexWrap: shouldWrap,
-                //    height: this.menuHtmlElement.clientHeight
-                //}))
-                //console.log(this.props.name, this.menuHtmlElement.clientHeight);
-            }
-        });
+        //window.addEventListener('resize', e => { // При изменении ширины экрана браузера, flexwWrap отрабатывает сначала у вложенных элементов, а надо наоборот
+        //    if (this.menuHtmlElement) {
+        //        //console.log(this.props.name, this.menuHtmlElement.clientWidth, (e.currentTarget as Window).innerWidth);
+        //        //let shouldWrap = this.menuHtmlElement.clientWidth > (e.currentTarget as Window).innerWidth-10;
+        //        //let shouldWrap = true;
+        //        //if (this.props.parentMenu) {
+        //        //    if (this.props.parentMenu.menuHtmlElement.clientHeight > 210) {
+        //        //        shouldWrap = false;
+        //        //    }
+        //        //}
+        //        //else 
+        //        //    shouldWrap=true;
+        //        //this.setState(state => ({
+        //        //    flexWrap: shouldWrap,
+        //        //    height: this.menuHtmlElement.clientHeight
+        //        //}))
+        //        //console.log(this.props.name, this.menuHtmlElement.clientHeight);
+        //    }
+        //});
     }
 //***************************************************************************************************************
     render() {
