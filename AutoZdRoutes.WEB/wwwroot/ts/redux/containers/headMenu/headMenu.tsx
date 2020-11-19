@@ -262,10 +262,10 @@ class _HeadMenu extends React.Component<PropsType, TState> {
                                             </Select>
                                         </FormControl>
                                     </Menu>
-                                    <Menu name="Скачать в JSON с сервера" img="dwnljson" click={async () => {
+                                    <Menu name="Скачать в JSON с сервера" img="dwnljson" onClick={async () => {
                                         await LoadPointsToJsonAsync();
                                     }} />
-                                    <Menu name="Залить в БД" img="uploadToBD" click={async () => {
+                                    <Menu name="Залить в БД" img="uploadToBD" onClick={async () => {
                                         await LoadPointsToBDFromJsonAsync();
                                     }}/>
 
@@ -327,13 +327,13 @@ class _HeadMenu extends React.Component<PropsType, TState> {
                                     </div>
                                 </Menu>
                             </Menu>
-                            <Menu name="Сохранить" img="save" click={async () => {
+                            <Menu name="Сохранить" img="save" onClick={async () => {
                                 await this.SaveSettingsAsync(this.props.settings);
                             }} />
-                            <Menu name="По умолчанию" img="default" click={async () => {
+                            <Menu name="По умолчанию" img="default" onClick={async () => {
                                 await this.SaveSettingsAsync(this.props.settings);
                             }} />
-                            <Menu name="Личные" img="users_settings" click={async () => {
+                            <Menu name="Личные" img="users_settings" onClick={async () => {
                                 await this.SaveSettingsAsync(this.props.settings);
 
                             }} />
@@ -354,7 +354,7 @@ class _HeadMenu extends React.Component<PropsType, TState> {
                     {this.props.userrole != adminRole ?
                         <TabPanel value={this.state.valueTab} index={4}>
                             <Menu name="StopUser">
-                                <Menu name="Bootstrap-админка" img="admin" click={() => {
+                                <Menu name="Bootstrap-админка" img="admin" onClick={() => {
                                     document.location.href = urlWeb + "/admin";
                                 }} />
                             </Menu>
@@ -362,12 +362,12 @@ class _HeadMenu extends React.Component<PropsType, TState> {
                         :
                         <TabPanel value={this.state.valueTab} index={4}>
                             <Menu name="Админка">
-                                <Menu name="Bootstrap-админка" img="admin" click={() => {
+                                <Menu name="Bootstrap-админка" img="admin" onClick={() => {
                                     document.location.href = urlWeb + "/admin";
                                 }} />
                                 <Menu name="Тесты сайта" img="test">
                                     <Menu name="Уведомления" img="notify">
-                                        <Menu name="Случайные" img="randMes" click={() => GenerateRandomCallFunc(window.SendNotification)} />
+                                        <Menu name="Случайные" img="randMes" onClick={() => GenerateRandomCallFunc(window.SendNotification)} />
                                         <div>
                                             <label style={{ display: 'block' }}>Введите текст:</label>
                                             <input style={{ margin: '5px' }} type="text" ref={el => this.inputNotifyTest = el} />

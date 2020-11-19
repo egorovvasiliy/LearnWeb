@@ -5,7 +5,7 @@ import * as styles from "./style.scss"
 const style = styles as ClassMenu;
 interface IProps {
     name: string;
-    click?: Function;
+    onClick?: Function;
     id?: number;
     selectIdFromParent?: number;
     img: string;
@@ -13,6 +13,7 @@ interface IProps {
 interface IState {
     isSelected: boolean;
 }
+/** Ярлык для элементов меню*/
 export default class Item extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
@@ -28,11 +29,11 @@ export default class Item extends React.Component<IProps, IState> {
     press = (e) => {
         //e.persist(); //Раскомментировать, если понадобится объект события
         //-------------------------------------------------
-        if (this.props.click)
-            this.props.click(this.props.id);
-        this.div.classList.add(style.wrapItem2)          //Подмигивание кнопки-листа --- немного антипаттерна реакту
-        setTimeout(() => {                            //
-            this.div.classList.remove(style.wrapItem2);  //
+        if (this.props.onClick)
+            this.props.onClick(this.props.id);
+        this.div.classList.add(style.wrapItem2)          // Подмигивание кнопки-листа --- немного антипаттерна реакту
+        setTimeout(() => {                            
+            this.div.classList.remove(style.wrapItem2);  
         },200);                                       
     }
     div: HTMLDivElement;

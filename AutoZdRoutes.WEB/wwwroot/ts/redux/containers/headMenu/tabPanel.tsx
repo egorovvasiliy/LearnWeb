@@ -7,7 +7,6 @@ interface TabPanelProps {
     index: any;
     value: any;
 }
-//--------Сторонний импорт----------------------
 const TabPanel = (props: TabPanelProps)=>{
     const { children, value, index, ...other } = props;
     return (

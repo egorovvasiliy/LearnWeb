@@ -64,6 +64,7 @@ namespace webPortal
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+
             app.UseMiddleware<TokenMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
